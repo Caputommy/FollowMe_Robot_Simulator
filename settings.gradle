@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'it.unicam.cs.followme'
-include('app', 'list', 'utilities')
+include ('api', 'app', 'utilities')
