@@ -1,5 +1,7 @@
 package it.unicam.cs.followme.model;
 
+import it.unicam.cs.followme.util.DoubleBiFunction;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.function.DoubleBinaryOperator;
@@ -12,7 +14,7 @@ import java.util.function.DoubleUnaryOperator;
 public class SurfacePosition {
 
     /**
-     * Returns the avarage location calculated among a non-empty list of positions <code> positions </code>.
+     * Returns the avarage position calculated among a non-empty list of positions <code> positions </code>.
      * @param positions
      * @throws IllegalArgumentException if the list of location is empty
      * @return the average position
@@ -27,34 +29,15 @@ public class SurfacePosition {
                 .mapCoordinates(c -> c/ n);
     }
 
-    /**
-     * Returns the location obtained applying the given unary operator <code> op </code> separately
-     * on each coordinate of the original location.
-     * @param op
-     * @return the location obtained from the appliance of <code> op </code>
-     */
-    public SurfacePosition mapCoordinates (DoubleUnaryOperator op) {
-        return new SurfacePosition(op.applyAsDouble(this.getX()), op.applyAsDouble(this.getY()));
-    }
-
-    /**
-     * Returns the location obtained applying the given binary operator <code> op </code> separately
-     * on each coordinate of the original location and the given location <code>otherLocation</code>.
-     * @param op
-     * @param otherLocation
-     * @return the location obtained from the appliance of <code> op </code> with <code> otherLocation </code>
-     */
-    public SurfacePosition combineCoordinates (DoubleBinaryOperator op, SurfacePosition otherLocation) {
-        return new SurfacePosition(
-                op.applyAsDouble(this.getX(), otherLocation.getX()),
-                op.applyAsDouble(this.getY(), otherLocation.getY()));
-    }
-
     private final double x;
     private final double y;
 
     public static final SurfacePosition ORIGIN = new SurfacePosition(0, 0);
-    private static final double EPSILON = 10E-6;
+
+    /**
+     * Constant used as maximum deviation between coordinates in order to be considered equal.
+     */
+    public static final double EPSILON = 10E-6;
 
     public SurfacePosition(double x, double y) {
         if (!(Double.isFinite(x) && Double.isFinite(x))) throw new IllegalArgumentException();
@@ -68,6 +51,60 @@ public class SurfacePosition {
 
     public double getY() {
         return y;
+    }
+
+    /**
+     * Calculates the Euclidean distance of the position from the origin.
+     * @return the Euclidean distance
+     */
+    public double getDistance() {
+        return this.getDistance(ORIGIN);
+    }
+
+    /**
+     * Calculates the Euclidean distance beetween the position and the given position <code>from</code>.
+     * @param from the position to calculate the distance from
+     * @return the Euclidean distance
+     */
+    public double getDistance(SurfacePosition from) {
+        return Math.sqrt(this
+                .combineCoordinates(((x1, x2) -> x1 - x2), from)
+                .mapCoordinates((x) -> x*x)
+                .reducePosition((Double::sum)));
+    }
+
+    /**
+     * Returns the position obtained applying the given unary operator <code> op </code> separately
+     * on each coordinate of the original position.
+     * @param op
+     * @return the location obtained from the appliance of <code> op </code>
+     */
+    public SurfacePosition mapCoordinates (DoubleUnaryOperator op) {
+        return new SurfacePosition(op.applyAsDouble(this.getX()), op.applyAsDouble(this.getY()));
+    }
+
+    /**
+     * Returns the position obtained applying the given binary operator <code> op </code> separately
+     * on each coordinate of the original location and the given postion <code>otherPosition</code>.
+     * @param op
+     * @param otherPosition
+     * @return the position obtained from the appliance of <code> op </code> with <code> otherPosition </code>
+     */
+    public SurfacePosition combineCoordinates (DoubleBinaryOperator op, SurfacePosition otherPosition) {
+        return new SurfacePosition(
+                op.applyAsDouble(this.getX(), otherPosition.getX()),
+                op.applyAsDouble(this.getY(), otherPosition.getY()));
+    }
+
+    /**
+     * Applies the given function <code>function</code> using the coordinates of the
+     * position as arguments.
+     * @param function the function to apply
+     * @return the result of the application
+     * @param <T> the type of the output
+     */
+    public <T> T reducePosition (DoubleBiFunction<T> function) {
+        return function.apply(this.getX(), this.getY());
     }
 
     @Override

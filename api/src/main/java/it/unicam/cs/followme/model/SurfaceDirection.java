@@ -35,10 +35,8 @@ public class SurfaceDirection implements Direction<SurfacePosition>{
         this.normalizedPosition = normalizePosition(end);
     }
 
-    private SurfacePosition normalizePosition(SurfacePosition position) {
-        SurfacePosition squaredPosition = position.mapCoordinates((x) -> x*x);
-        double normalizationFactor = Math.sqrt(squaredPosition.getX() + squaredPosition.getY());
-        return position.mapCoordinates(x -> x/normalizationFactor);
+    private static SurfacePosition normalizePosition(SurfacePosition position) {
+        return position.mapCoordinates(x -> x/position.getDistance());
     }
 
     public SurfacePosition getNormalizedPosition() {

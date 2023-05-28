@@ -18,7 +18,7 @@ public class SurfaceDirectionTest {
     @Test
     public void shouldConstructNormalizedDirection2 () {
         SurfaceDirection dir = new SurfaceDirection(
-                new SurfacePosition(3,4), new SurfacePosition(-8,8));
+                new SurfacePosition(8,-8), new SurfacePosition(3,4));
         SurfacePosition expectedNormalizedPosition = new SurfacePosition((-5.0/13), (12.0/13));
         assertEquals(expectedNormalizedPosition, dir.getNormalizedPosition());
     }
