@@ -14,6 +14,10 @@ public record DoubleRange(double start, double end){
         this.end = Math.max(start, end);
     }
 
+    public boolean hasInRange(double value) {
+        return this.start <= value && value <= this.end;
+    }
+
     public double getRandomDoubleInRange() {
         return this.randomInRange(new Random());
     }

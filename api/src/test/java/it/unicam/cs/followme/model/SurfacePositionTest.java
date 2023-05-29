@@ -31,4 +31,9 @@ public class SurfacePositionTest {
         double expectedDistance = 41;
         assertTrue(p.getDistance() - expectedDistance <= SurfacePosition.EPSILON);
     }
+
+    @Test
+    public void shouldGenerateRandomPosition () {
+        //TODO
+    }
 }
