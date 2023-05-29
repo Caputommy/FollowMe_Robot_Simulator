@@ -1,6 +1,7 @@
 package it.unicam.cs.followme.model;
 
 import it.unicam.cs.followme.util.DoubleBiFunction;
+import it.unicam.cs.followme.util.DoubleRange;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +28,29 @@ public class SurfacePosition {
                 .reduce((l1, l2) -> l1.combineCoordinates(Double::sum, l2))
                 .get()
                 .mapCoordinates(c -> c/ n);
+    }
+
+    /**
+     * Returns a random position such that his coordinates are choosen randomly respectively in the
+     * the given ranges rangeX and rangeY.
+     * @param rangeX the range from witch x coordinate is choosen
+     * @param rangeY the range from witch y coordinate is choosen
+     * @return the random position
+     */
+    SurfacePosition getRandomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY) {
+        return new SurfacePosition(rangeX.getRandomDoubleInRange(), rangeY.getRandomDoubleInRange());
+    }
+
+    /**
+     * Returns a seeded random position such that his coordinates are choosen randomly respectively in the
+     * the given ranges rangeX and rangeY.
+     * @param rangeX the range from witch x coordinate is choosen
+     * @param rangeY the range from witch y coordinate is choosen
+     * @param seed the seed of the random position
+     * @return the random position
+     */
+    SurfacePosition getRandomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY, long seed) {
+        return new SurfacePosition(rangeX.getRandomDoubleInRange(seed), rangeY.getRandomDoubleInRange(seed));
     }
 
     private final double x;
