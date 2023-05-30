@@ -10,5 +10,6 @@ public interface FollowMeAreaConstructor {
             switch (data.shape()) {
                 case "CIRCLE" -> new FollowMeCircleArea(data.label(), data.args()[2]);
                 case "RECTANGLE" -> new FollowMeRectangleArea(data.label(), data.args()[2], data.args()[3]);
+                default -> throw new IllegalArgumentException();
     };
 }

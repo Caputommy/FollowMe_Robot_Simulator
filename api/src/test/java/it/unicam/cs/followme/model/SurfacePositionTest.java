@@ -1,5 +1,6 @@
 package it.unicam.cs.followme.model;
 
+import it.unicam.cs.followme.util.DoubleRange;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SurfacePositionTest {
+
+    private long seed = 123456789;
     @Test
     public void shouldCalulateAverage () {
         List<SurfacePosition> list = new ArrayList<>();
@@ -34,6 +37,14 @@ public class SurfacePositionTest {
 
     @Test
     public void shouldGenerateRandomPosition () {
-        //TODO
+        DoubleRange rx, ry;
+        SurfacePosition p;
+        for (int i = -2; i<2; i++) {
+            rx = new DoubleRange(i, i+4);
+            ry = new DoubleRange(i, i+4);
+            p = SurfacePosition.getRandomPositionInRanges(rx, ry, seed);
+            assertTrue((i <= p.getX() && p.getX() <= i+4) && (i <= p.getY() && p.getY() <= i+4));
+        }
+
     }
 }

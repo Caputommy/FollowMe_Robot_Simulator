@@ -1,11 +1,13 @@
 package it.unicam.cs.followme.model;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SurfaceDirectionTest {
     @Test
@@ -21,5 +23,10 @@ public class SurfaceDirectionTest {
                 new SurfacePosition(8,-8), new SurfacePosition(3,4));
         SurfacePosition expectedNormalizedPosition = new SurfacePosition((-5.0/13), (12.0/13));
         assertEquals(expectedNormalizedPosition, dir.getNormalizedPosition());
+    }
+
+    @Test
+    public void shouldBeInvalidDirection () {
+        assertThrows(IllegalArgumentException.class, () -> new SurfaceDirection(0,0));
     }
 }

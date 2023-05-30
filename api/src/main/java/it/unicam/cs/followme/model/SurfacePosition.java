@@ -37,7 +37,7 @@ public class SurfacePosition {
      * @param rangeY the range from witch y coordinate is choosen
      * @return the random position
      */
-    SurfacePosition getRandomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY) {
+    public static SurfacePosition getRandomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY) {
         return new SurfacePosition(rangeX.getRandomDoubleInRange(), rangeY.getRandomDoubleInRange());
     }
 
@@ -49,7 +49,7 @@ public class SurfacePosition {
      * @param seed the seed of the random position
      * @return the random position
      */
-    SurfacePosition getRandomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY, long seed) {
+    public static SurfacePosition getRandomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY, long seed) {
         return new SurfacePosition(rangeX.getRandomDoubleInRange(seed), rangeY.getRandomDoubleInRange(seed));
     }
 

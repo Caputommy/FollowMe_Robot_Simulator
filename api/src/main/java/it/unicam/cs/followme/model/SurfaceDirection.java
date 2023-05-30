@@ -24,6 +24,17 @@ public class SurfaceDirection implements Direction<SurfacePosition>{
     }
 
     /**
+     * Constructs a direction based on the given coordinates representing an absolute position,
+     * that is the direction obtained from the origin to the given point.
+     * @param x the x coordinate of the absolute position
+     * @param y the y coordinate of the absolute position
+     * @throws IllegalArgumentException if the argument is null or is the origin position
+     */
+    public SurfaceDirection (double x, double y) {
+        this(new SurfacePosition(x, y));
+    }
+
+    /**
      * Constructs a direction based on the given absolute position, that is the
      * direction obtained from the origin to the given point.
      * @param end the absolute position

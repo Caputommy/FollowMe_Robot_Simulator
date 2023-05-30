@@ -9,7 +9,6 @@ public class FollowMeCircleArea extends FollowMeArea {
     public FollowMeCircleArea(String label, double radius) {
         this(new FollowMeLabel(label), radius);
     }
-
     public FollowMeCircleArea(String label) {
         this(new FollowMeLabel(label));
     }

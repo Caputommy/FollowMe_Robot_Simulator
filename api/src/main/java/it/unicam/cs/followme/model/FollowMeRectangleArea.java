@@ -31,6 +31,14 @@ public class FollowMeRectangleArea extends FollowMeArea {
         this.rangeY = new DoubleRange(-this.height/2, this.height/2);
     }
 
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
     @Override
     public boolean includes(SurfacePosition position) {
         return this.rangeX.hasInRange(position.getX()) && this.rangeY.hasInRange(position.getY());
