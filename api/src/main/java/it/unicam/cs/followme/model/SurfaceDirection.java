@@ -1,5 +1,7 @@
 package it.unicam.cs.followme.model;
 
+import java.util.Objects;
+
 /**
  * Represents a direction in the bidimensional surface as a vector of magnitude one, having its end point
  * in a specified <code>SurfacePosition</code> and application point in the origin.
@@ -9,7 +11,7 @@ public class SurfaceDirection implements Direction<SurfacePosition>{
     /**
      * End point of the vector, such that has an Ecuclidean norm equal to one.
      */
-    private SurfacePosition normalizedPosition;
+    private final SurfacePosition normalizedPosition;
 
     /**
      * Constructs a direction based on the given position <code>end</code> relative to the
@@ -55,7 +57,25 @@ public class SurfaceDirection implements Direction<SurfacePosition>{
     }
 
     @Override
-    public SurfacePosition translate(SurfacePosition pos, double meters) {
+    public SurfacePosition shift(SurfacePosition pos, double meters) {
         return pos.combineCoordinates((Double::sum), this.getNormalizedPosition().mapCoordinates(x -> x*meters));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SurfaceDirection other = (SurfaceDirection) o;
+        return this.normalizedPosition.equals(other.normalizedPosition);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.normalizedPosition.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "<" + this.normalizedPosition.getX() + ", " + this.normalizedPosition.getY() + ">";
     }
 }
