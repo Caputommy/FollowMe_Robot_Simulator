@@ -1,4 +1,6 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.items;
+
+import it.unicam.cs.followme.model.environment.SurfacePosition;
 
 /**
  * Represents a direction in the bidimensional surface as a vector of magnitude one, having its end point

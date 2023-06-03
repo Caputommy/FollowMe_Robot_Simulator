@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.followme;
 
 import it.unicam.cs.followme.utilities.ShapeData;
 

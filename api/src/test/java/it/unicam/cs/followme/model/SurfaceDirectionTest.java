@@ -1,10 +1,8 @@
 package it.unicam.cs.followme.model;
 
+import it.unicam.cs.followme.model.environment.SurfacePosition;
+import it.unicam.cs.followme.model.items.SurfaceDirection;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

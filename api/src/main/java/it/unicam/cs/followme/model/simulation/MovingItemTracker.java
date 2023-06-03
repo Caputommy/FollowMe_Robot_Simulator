@@ -1,4 +1,6 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.simulation;
+
+import it.unicam.cs.followme.model.items.MovingItem;
 
 import java.util.Map;
 import java.util.Optional;

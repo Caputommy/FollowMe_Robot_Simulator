@@ -1,8 +1,12 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.simulation;
 
-import java.util.List;
+import it.unicam.cs.followme.model.environment.Position;
+import it.unicam.cs.followme.model.items.ConditionSignaler;
+import it.unicam.cs.followme.model.items.MovingItem;
+
+import java.util.Set;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public class SignaledConditionTracker<P extends Position<P>, L, I extends ConditionSignaler<L> & MovingItem<P>> {
 
@@ -20,13 +24,13 @@ public class SignaledConditionTracker<P extends Position<P>, L, I extends Condit
      * @param maxDistance the distance range of the capture.
      * @return the list of labels of captured signals.
      */
-    List<L> captureSignaledConditions (P position, double maxDistance) {
+    Set<L> captureSignaledConditions (P position, double maxDistance) {
         return itemTracker.getMapping()
                 .entrySet()
                 .stream()
                 .filter(e -> e.getValue().getDistanceFrom(position) <= maxDistance)
                 .map(Map.Entry::getKey)
                 .<L>flatMap(i -> i.getConditions().stream())
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

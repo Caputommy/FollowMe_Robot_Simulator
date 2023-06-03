@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.environment;
 
 /**
  * Classes implementing this interface are used to represent a labeled set of positions in a space.

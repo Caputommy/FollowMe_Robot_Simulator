@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.items;
 
 /**
  * Classes extending this abstract class are particular moving items which follow a uniform rectilinear

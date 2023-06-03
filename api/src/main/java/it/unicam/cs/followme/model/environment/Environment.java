@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.environment;
 
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,5 +1,7 @@
 package it.unicam.cs.followme.model;
 
+import it.unicam.cs.followme.model.environment.*;
+import it.unicam.cs.followme.model.followme.*;
 import it.unicam.cs.followme.util.DoubleRange;
 import it.unicam.cs.followme.utilities.ShapeData;
 import org.junit.jupiter.api.Test;

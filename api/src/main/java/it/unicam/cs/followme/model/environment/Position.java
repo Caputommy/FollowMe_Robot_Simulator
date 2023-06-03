@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.environment;
 
 /**
  * Classes implementing this interface represent a position in a space that can evaluate their distance

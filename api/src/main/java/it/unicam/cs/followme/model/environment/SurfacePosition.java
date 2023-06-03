@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.environment;
 
 import it.unicam.cs.followme.util.DoubleBiFunction;
 import it.unicam.cs.followme.util.DoubleRange;

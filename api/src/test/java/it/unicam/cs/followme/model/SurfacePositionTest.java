@@ -1,5 +1,6 @@
 package it.unicam.cs.followme.model;
 
+import it.unicam.cs.followme.model.environment.SurfacePosition;
 import it.unicam.cs.followme.util.DoubleRange;
 import org.junit.jupiter.api.Test;
 

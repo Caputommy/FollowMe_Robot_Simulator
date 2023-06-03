@@ -1,5 +1,6 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.followme;
 
+import it.unicam.cs.followme.model.environment.SurfacePosition;
 import it.unicam.cs.followme.util.DoubleRange;
 
 public class FollowMeRectangleArea extends FollowMeArea {

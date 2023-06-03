@@ -1,5 +1,9 @@
 package it.unicam.cs.followme.model;
 
+import it.unicam.cs.followme.model.environment.*;
+import it.unicam.cs.followme.model.followme.FollowMeCircleArea;
+import it.unicam.cs.followme.model.followme.FollowMeLabel;
+import it.unicam.cs.followme.model.followme.FollowMeRectangleArea;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

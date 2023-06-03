@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.items;
 
 /**
  * Classes implementing this interface are moving objects that can predict their future position based
