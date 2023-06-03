@@ -12,7 +12,7 @@ import java.util.function.DoubleUnaryOperator;
  * Represents a point in a bidimensional space, defined by a couple of real numbers as
  * coordinates of the point.
  */
-public class SurfacePosition {
+public class SurfacePosition implements Position<SurfacePosition> {
 
     /**
      * Returns the avarage position calculated among a non-empty list of positions <code> positions </code>.
@@ -81,18 +81,18 @@ public class SurfacePosition {
      * Calculates the Euclidean distance of the position from the origin.
      * @return the Euclidean distance
      */
-    public double getDistance() {
-        return this.getDistance(ORIGIN);
+    public double getDistanceFrom() {
+        return this.getDistanceFrom(ORIGIN);
     }
 
     /**
      * Calculates the Euclidean distance beetween the position and the given position <code>from</code>.
-     * @param from the position to calculate the distance from
+     * @param other the position to calculate the distance from
      * @return the Euclidean distance
      */
-    public double getDistance(SurfacePosition from) {
+    public double getDistanceFrom(SurfacePosition other) {
         return Math.sqrt(this
-                .combineCoordinates(((x1, x2) -> x1 - x2), from)
+                .combineCoordinates(((x1, x2) -> x1 - x2), other)
                 .mapCoordinates((x) -> x*x)
                 .reducePosition((Double::sum)));
     }

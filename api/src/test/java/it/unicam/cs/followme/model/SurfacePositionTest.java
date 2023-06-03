@@ -25,14 +25,14 @@ public class SurfacePositionTest {
         SurfacePosition p1 = new SurfacePosition(13, 18);
         SurfacePosition p2 = new SurfacePosition(5, 3);
         double expectedDistance = 17;
-        assertTrue(p1.getDistance(p2) - expectedDistance <= SurfacePosition.EPSILON);
+        assertTrue(p1.getDistanceFrom(p2) - expectedDistance <= SurfacePosition.EPSILON);
     }
 
     @Test
     public void shouldCaluclateDistance2 () {
         SurfacePosition p = new SurfacePosition(9, 40);
         double expectedDistance = 41;
-        assertTrue(p.getDistance() - expectedDistance <= SurfacePosition.EPSILON);
+        assertTrue(p.getDistanceFrom() - expectedDistance <= SurfacePosition.EPSILON);
     }
 
     @Test

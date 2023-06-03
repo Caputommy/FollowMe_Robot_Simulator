@@ -3,6 +3,7 @@ package it.unicam.cs.followme.model;
 /**
  * Classes extending this abstract class are particular moving items which follow a uniform rectilinear
  * motion that can be described with direction and velocity.
+ *
  * @param <P> the type of positions the item can move among.
  * @param <D> the type of direction the item can follow.
  */

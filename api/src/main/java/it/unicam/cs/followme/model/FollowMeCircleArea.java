@@ -27,6 +27,6 @@ public class FollowMeCircleArea extends FollowMeArea {
 
     @Override
     public boolean includes(SurfacePosition position) {
-        return position.getDistance(SurfacePosition.ORIGIN) <= this.radius;
+        return position.getDistanceFrom(SurfacePosition.ORIGIN) <= this.radius;
     }
 }
