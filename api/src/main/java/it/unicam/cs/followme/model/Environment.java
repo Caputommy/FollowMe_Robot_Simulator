@@ -1,6 +1,6 @@
 package it.unicam.cs.followme.model;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -21,24 +21,24 @@ public interface Environment<P, L> {
     void addArea (Area<P, L> area, P position);
 
     /**
-     * Returns the list of all the deployed areas of the environment that contains the given position.
+     * Returns the set of all the deployed areas of the environment that contains the given position.
      *
      * @param position the position to be evaluated.
      * @return the list of labeled areas.
      */
-    List<Area<P, L>> getAreas (P position);
+    Set<Area<P, L>> getAreas (P position);
 
     /**
-     * Returns the list of all the active labels of the environment in the given position. The returned list
+     * Returns the set of all the active labels of the environment in the given position. The returned list
      * contains the labels obtained from the areas that include the given position.
      *
      * @param position the position.
      * @return the list of active labels on the position.
      */
-    default List<L> getLabels (P position) {
+    default Set<L> getLabels (P position) {
         return getAreas(position)
                 .stream()
                 .map(Area::getLabel)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 }

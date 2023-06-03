@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 public class SignaledConditionTrackerTest {
 
     @Test
-    public void shouldCaptureSignals {
+    public void shouldCaptureSignals() {
         //TODO
     }
 }

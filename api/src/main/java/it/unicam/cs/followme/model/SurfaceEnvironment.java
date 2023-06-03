@@ -1,8 +1,9 @@
 package it.unicam.cs.followme.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * An hash map implemented environment based on surface positions.
@@ -23,11 +24,11 @@ public class SurfaceEnvironment<L> implements Environment<SurfacePosition, L> {
     }
 
     @Override
-    public List<Area<SurfacePosition, L>> getAreas(SurfacePosition position) {
+    public Set<Area<SurfacePosition, L>> getAreas(SurfacePosition position) {
         return this.map.entrySet()
                 .stream()
                 .filter(e -> e.getKey().includes(position.combineCoordinates((x, y) -> x - y, e.getValue())))
                 .map(Map.Entry::getKey)
-                .toList();
+                .collect(Collectors.toSet());
     }
 }
