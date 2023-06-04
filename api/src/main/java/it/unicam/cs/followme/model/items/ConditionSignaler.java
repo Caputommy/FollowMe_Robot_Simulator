@@ -16,4 +16,14 @@ public interface ConditionSignaler<L> {
      * @return the list of labels
      */
     List<L> getConditions ();
+
+    /**
+     * Adds a condition to those that are signaled by this signaler.
+     *
+     * @param label the label representing the signaled condition
+     * @return true if
+     */
+    boolean signal (L label);
+
+    boolean unsignal (L label);
 }

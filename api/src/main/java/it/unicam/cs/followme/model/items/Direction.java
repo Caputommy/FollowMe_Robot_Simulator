@@ -1,7 +1,7 @@
 package it.unicam.cs.followme.model.items;
 
 /**
- * Represents a unitary rectilinear direction.
+ * Classes implementing this interface represents a path in the pace.
  *
  * @param <P> type representing the position that can be shifted by the direction
  */
