@@ -20,10 +20,16 @@ public interface ConditionSignaler<L> {
     /**
      * Adds a condition to those that are signaled by this signaler.
      *
-     * @param label the label representing the signaled condition
-     * @return true if
+     * @param label the label representing the signaled condition.
+     * @return true if the set of signaled conditions of this item changed as result of this call.
      */
     boolean signal (L label);
 
+    /**
+     * Removes a condition to those that are signaled by this signaler.
+     *
+     * @param label the label representing the signaled condition
+     * @return true if the set of signaled conditions of this item changed as result of this call.
+     */
     boolean unsignal (L label);
 }

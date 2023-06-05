@@ -13,6 +13,10 @@ public final class ProgramInstruction<I> implements ProgramLine<I> {
         this.next = Optional.empty();
     }
 
+    public void setNext (Optional<ProgramLine<I>> next) {
+        this.next = next;
+    }
+
     @Override
     public Optional<ProgramLine<I>> execute(I item) {
         this.instruction.accept(item);

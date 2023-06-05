@@ -2,29 +2,43 @@ package it.unicam.cs.followme.model.simulation;
 
 import it.unicam.cs.followme.model.environment.Environment;
 import it.unicam.cs.followme.model.environment.SurfacePosition;
+import it.unicam.cs.followme.model.followme.FollowMeLabel;
 import it.unicam.cs.followme.model.items.ConditionSignaler;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.items.UniformMotionMovingItem;
+import it.unicam.cs.followme.util.DoubleRange;
 import it.unicam.cs.followme.utilities.FollowMeParserHandler;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.Stack;
 
-public class SurfaceMovingSignalingItemProgramParserHandler<L,
-        I extends UniformMotionMovingItem<SurfacePosition> & ConditionSignaler<L>> implements FollowMeParserHandler {
-    private final Environment<SurfacePosition, L> environment;
-    private final SignaledConditionTracker<SurfacePosition, L, I> conditionTracker;
+public class SurfaceMovingSignalingItemProgramParserHandler
+        <I extends UniformMotionMovingItem<SurfacePosition> & ConditionSignaler<FollowMeLabel>>
+        implements FollowMeParserHandler {
+    private final Environment<SurfacePosition, FollowMeLabel> environment;
+    private final SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, I> itemTracker;
     private boolean parsingDone;
     private ProgramLine<I> headLine;
     private ProgramLine<I> currentLine;
     private Stack<ProgramCondition<I>> conditionStack;
 
-    public SurfaceMovingSignalingItemProgramParserHandler(Environment<SurfacePosition, L> environment,
-                                            SignaledConditionTracker<SurfacePosition, L, I> conditionTracker) {
+    public SurfaceMovingSignalingItemProgramParserHandler(Environment<SurfacePosition, FollowMeLabel> environment,
+                                                          SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, I> itemTracker) {
         this.environment = environment;
-        this.conditionTracker = conditionTracker;
+        this.itemTracker = itemTracker;
         this.parsingDone = false;
     }
+
+    public boolean isParsingDone() {
+        return parsingDone;
+    }
+
+    //TODO
+    public ProgramLine<I> getProgramHeadLine() {
+        return headLine;
+    }
+
     @Override
     public void parsingStarted() {
         this.headLine = new ProgramCondition<I>((item) -> true);
@@ -39,68 +53,129 @@ public class SurfaceMovingSignalingItemProgramParserHandler<L,
 
     @Override
     public void moveCommand(double[] args) {
-        ProgramInstruction<I> instruction = new ProgramInstruction<>((item) -> {
+        ProgramInstruction<I> moveInstruction = new ProgramInstruction<>((item) -> {
             item.setCurrentDirection(new SurfaceDirection(args[0], args[1]));
             item.setCurrentVelocity(args[2]);
         });
-
+        setCurrentLine(moveInstruction);
     }
 
+    //Assuming the given range of positions counts as absolute.
     @Override
     public void moveRandomCommand(double[] args) {
-
+        ProgramInstruction<I> moveRandomInstruction = new ProgramInstruction<>((item) -> {
+            DoubleRange rangeX = new DoubleRange(args[0], args[1]);
+            DoubleRange rangeY = new DoubleRange(args[2], args[3]);
+            setRandomDirectionFromAbsoluteRanges(item, rangeX, rangeY);
+            item.setCurrentVelocity(args[4]);
+        });
+        setCurrentLine(moveRandomInstruction);
     }
 
     @Override
     public void signalCommand(String label) {
-
+        ProgramInstruction<I> signalInstruction = new ProgramInstruction<>((item) -> {
+            item.signal(new FollowMeLabel(label));
+        });
+        setCurrentLine(signalInstruction);
     }
 
     @Override
     public void unsignalCommand(String label) {
-
+        ProgramInstruction<I> unsignalInstruction = new ProgramInstruction<>((item) -> {
+            item.unsignal(new FollowMeLabel(label));
+        });
+        setCurrentLine(unsignalInstruction);
     }
 
     @Override
     public void followCommand(String label, double[] args) {
-
+        ProgramInstruction<I> followInstruction = new ProgramInstruction<>((item) -> {
+            Set<SurfacePosition> inRangePositions = itemTracker.getSources(item, new FollowMeLabel(label), args[0]);
+            if (inRangePositions.isEmpty()) {
+                DoubleRange range = new DoubleRange(-args[0], args[0]);
+                setRandomDirectionFromRelativeRanges(item, range, range);
+            }
+            else item.setCurrentDirection(new SurfaceDirection(SurfacePosition.averageLocation(inRangePositions).get()));
+        });
+        setCurrentLine(followInstruction);
     }
 
     @Override
     public void stopCommand() {
-
+        ProgramInstruction<I> stopInstruction = new ProgramInstruction<>((item) -> {
+            item.setCurrentVelocity(0);
+        });
+        setCurrentLine(stopInstruction);
     }
 
     @Override
     public void waitCommand(int s) {
-
+        if (s > 0) {
+            ProgramInstruction<I> waitInstruction = new ProgramInstruction<>((item) -> {});
+            setCurrentLine(waitInstruction);
+            waitCommand(s-1);
+        }
     }
 
     @Override
     public void repeatCommandStart(int n) {
-
+        ProgramVariable<I, Integer> counterVariable = new ProgramVariable<>(n);
+        ProgramCondition<I> repeatCondition = new ProgramCondition<>((item) -> {
+            counterVariable.setValue(item, counterVariable.getValue(item)-1);
+            return (counterVariable.getValue(item) >= 0);
+        });
+        setCurrentLine(repeatCondition);
     }
 
     @Override
     public void untilCommandStart(String label) {
-
+        ProgramCondition<I> untilCondition = new ProgramCondition<>((item) -> {
+            return environment
+                    .getLabels(itemTracker.getCurrentPosition(item).get())
+                    .contains(new FollowMeLabel(label));
+        });
+        setCurrentLine(untilCondition);
     }
 
     @Override
     public void doForeverStart() {
-
+        ProgramCondition<I> foreverCondition = new ProgramCondition<>((item) -> true);
+        setCurrentLine(foreverCondition);
     }
 
     @Override
     public void doneCommand() {
-
+        setCurrentLine(this.conditionStack.pop());
     }
 
+    /*
+        Chains the given newProgramLine to the current one following the following logic:
+        - if the currentLine is a condition, checks if the newProgramLine has to be set as its ifTrue or the ifFalse branch.
+        - if the currentLine is an instruction, simply sets its next line to the newProgramLine.
+     */
     private void setCurrentLine (ProgramLine<I> newProgramLine) {
-        if (!this.conditionStack.empty() && this.currentLine.equals(this.conditionStack.peek())) {
-                this.conditionStack.peek().setIfTrue(Optional.ofNullable(newProgramLine));
-            }
+        if (this.currentLine instanceof ProgramCondition<I> currentCondition) {
+            if (!this.conditionStack.isEmpty() && this.conditionStack.peek().equals(currentCondition))
+                currentCondition.setIfTrue(Optional.ofNullable(newProgramLine));
+            else currentCondition.setIfFalse(Optional.ofNullable(newProgramLine));
         }
-        //TODO
+        else if (this.currentLine instanceof ProgramInstruction<I> currentInstruction) {
+            currentInstruction.setNext(Optional.ofNullable(newProgramLine));
+        }
+        this.currentLine = newProgramLine;
+    }
+
+    private void setRandomDirectionFromAbsoluteRanges (I item, DoubleRange rangeX, DoubleRange rangeY) {
+        item.setCurrentDirection(new SurfaceDirection(
+                SurfacePosition.getRandomPositionInRanges(rangeX, rangeY)
+                        .combineCoordinates((x1, x2) -> x1 - x2, itemTracker.getCurrentPosition(item).get())
+        ));
+    }
+
+    private void setRandomDirectionFromRelativeRanges (I item, DoubleRange rangeX, DoubleRange rangeY) {
+        item.setCurrentDirection(new SurfaceDirection(
+                SurfacePosition.getRandomPositionInRanges(rangeX, rangeY))
+        );
     }
 }

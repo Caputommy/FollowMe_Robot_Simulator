@@ -4,8 +4,8 @@ import it.unicam.cs.followme.model.environment.SurfacePosition;
 import it.unicam.cs.followme.util.DoubleRange;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,11 +14,11 @@ public class SurfacePositionTest {
     private long seed = 123456789;
     @Test
     public void shouldCalulateAverage () {
-        List<SurfacePosition> list = new ArrayList<>();
-        list.add(new SurfacePosition(3.5, 5));
-        list.add(new SurfacePosition(2.5, 8));
-        list.add(new SurfacePosition(4.5, 11));
-        assertEquals(new SurfacePosition(3.5, 8), SurfacePosition.averageLocation(list));
+        Set<SurfacePosition> set = new HashSet<>();
+        set.add(new SurfacePosition(3.5, 5));
+        set.add(new SurfacePosition(2.5, 8));
+        set.add(new SurfacePosition(4.5, 11));
+        assertEquals(new SurfacePosition(3.5, 8), SurfacePosition.averageLocation(set));
     }
 
     @Test
