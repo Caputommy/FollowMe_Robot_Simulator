@@ -14,7 +14,7 @@ import java.util.function.DoubleUnaryOperator;
  * Represents a point in a two-dimensional space, defined by a couple of real numbers as
  * coordinates of the point.
  */
-public class SurfacePosition implements Position<SurfacePosition> {
+public record SurfacePosition(double x, double y) implements Position<SurfacePosition> {
 
     /**
      * Returns the average position calculated among a set of positions <code>positions</code>.
@@ -26,7 +26,7 @@ public class SurfacePosition implements Position<SurfacePosition> {
     public static Optional<SurfacePosition> averageLocation(Set<SurfacePosition> positions) {
         long n = positions.size();
         if (n == 0) return Optional.empty();
-        return Optional.ofNullable(
+        return Optional.of(
                 positions
                 .stream()
                 .reduce((l1, l2) -> l1.combineCoordinates(Double::sum, l2))
@@ -60,9 +60,6 @@ public class SurfacePosition implements Position<SurfacePosition> {
         return new SurfacePosition(rangeX.getRandomDoubleInRange(seed), rangeY.getRandomDoubleInRange(seed));
     }
 
-    private final double x;
-    private final double y;
-
     public static final SurfacePosition ORIGIN = new SurfacePosition(0, 0);
 
     /**
@@ -71,7 +68,7 @@ public class SurfacePosition implements Position<SurfacePosition> {
     public static final double EPSILON = 10E-6;
 
     public SurfacePosition(double x, double y) {
-        if (!(Double.isFinite(x) && Double.isFinite(x))) throw new IllegalArgumentException();
+        if (!(Double.isFinite(x) && Double.isFinite(y))) throw new IllegalArgumentException();
         this.x = x;
         this.y = y;
     }

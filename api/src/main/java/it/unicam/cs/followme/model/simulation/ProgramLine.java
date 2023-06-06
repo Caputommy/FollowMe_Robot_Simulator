@@ -4,7 +4,8 @@ import java.util.Optional;
 
 /**
  * Instances of this class are the building blocks of a sequential deterministic program that
- * consists of instructions that can determine their successors during execution.
+ * consists of instructions that can determine their successor during execution.
+ * Possible instances of this class are <code>ProgramCondition</code> and <code>ProgramInstruction</code>.
  *
  * @param <I> type of the item that receives the instructions of the program.
  */

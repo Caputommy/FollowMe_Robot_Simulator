@@ -6,7 +6,7 @@ package it.unicam.cs.followme.model.items;
  *
  * @param <P> the type of positions the item can move among.
  */
-public abstract class UniformMotionMovingItem <P> implements MovingItem<P> {
+public abstract class UniformMotionMovingItem<P> implements MovingItem<P> {
     private Direction<P> currentDirection;
     private double currentVelocity;
 

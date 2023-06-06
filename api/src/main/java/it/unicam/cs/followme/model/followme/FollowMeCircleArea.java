@@ -17,7 +17,6 @@ public class FollowMeCircleArea extends FollowMeArea {
     public FollowMeCircleArea(FollowMeLabel label) {
         this(label, DEFAULT_RADIUS);
     }
-
     public FollowMeCircleArea(FollowMeLabel label, double radius) {
         super(label);
         this.radius = radius;

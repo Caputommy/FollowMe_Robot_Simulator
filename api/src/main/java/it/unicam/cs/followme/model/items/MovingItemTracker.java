@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model.simulation;
+package it.unicam.cs.followme.model.items;
 
 import it.unicam.cs.followme.model.items.MovingItem;
 
@@ -8,8 +8,8 @@ import java.util.Optional;
 /**
  * Classes implementing this interface take track of the position of a set of moving items over time.
  *
- * @param <P> type representing the position of the items
- * @param <I> type representing the moving items
+ * @param <P> type representing the position of the items.
+ * @param <I> type representing the moving items.
  */
 
 public interface MovingItemTracker<P, I extends MovingItem<P>> {

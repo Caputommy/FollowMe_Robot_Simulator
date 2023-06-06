@@ -1,14 +1,23 @@
-package it.unicam.cs.followme.model.simulation;
+package it.unicam.cs.followme.model.items;
 
 import it.unicam.cs.followme.model.environment.Position;
 import it.unicam.cs.followme.model.items.ConditionSignaler;
 import it.unicam.cs.followme.model.items.MovingItem;
+import it.unicam.cs.followme.model.items.MovingItemTracker;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Instances of this class are particular moving item trackers that take track of items that can also signal
+ * conditions and, thus, can track the origin of conditions signaled by those items.
+ *
+ * @param <P> type representing the position of the items.
+ * @param <L> type representing the label of the signaled conditions.
+ * @param <I> type representing the moving items.
+ */
 public abstract class SignalingMovingItemTracker<P extends Position<P>, L, I extends ConditionSignaler<L> & MovingItem<P>>
         implements MovingItemTracker<P, I> {
 

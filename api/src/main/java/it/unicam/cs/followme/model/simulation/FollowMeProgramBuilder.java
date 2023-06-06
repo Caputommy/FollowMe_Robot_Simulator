@@ -4,6 +4,7 @@ import it.unicam.cs.followme.model.environment.Environment;
 import it.unicam.cs.followme.model.environment.SurfacePosition;
 import it.unicam.cs.followme.model.followme.FollowMeLabel;
 import it.unicam.cs.followme.model.items.ConditionSignaler;
+import it.unicam.cs.followme.model.items.SignalingMovingItemTracker;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.items.UniformMotionMovingItem;
 import it.unicam.cs.followme.util.DoubleRange;
@@ -13,7 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
-public class SurfaceMovingSignalingItemProgramParserHandler
+public class FollowMeProgramBuilder
         <I extends UniformMotionMovingItem<SurfacePosition> & ConditionSignaler<FollowMeLabel>>
         implements FollowMeParserHandler {
     private final Environment<SurfacePosition, FollowMeLabel> environment;
@@ -23,8 +24,8 @@ public class SurfaceMovingSignalingItemProgramParserHandler
     private ProgramLine<I> currentLine;
     private Stack<ProgramCondition<I>> conditionStack;
 
-    public SurfaceMovingSignalingItemProgramParserHandler(Environment<SurfacePosition, FollowMeLabel> environment,
-                                                          SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, I> itemTracker) {
+    public FollowMeProgramBuilder(Environment<SurfacePosition, FollowMeLabel> environment,
+                                  SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, I> itemTracker) {
         this.environment = environment;
         this.itemTracker = itemTracker;
         this.parsingDone = false;
