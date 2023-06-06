@@ -1,9 +1,6 @@
 package it.unicam.cs.followme.model.items;
 
 import it.unicam.cs.followme.model.environment.Position;
-import it.unicam.cs.followme.model.items.ConditionSignaler;
-import it.unicam.cs.followme.model.items.MovingItem;
-import it.unicam.cs.followme.model.items.MovingItemTracker;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -48,7 +45,7 @@ public abstract class SignalingMovingItemTracker<P extends Position<P>, L, I ext
      * @param maxDistance the distance range of the capture.
      * @return the set of nearby positions where the given condition is signaled.
      */
-    public Set<P> getSources (P position, L condition, double maxDistance) {
+    public Set<P> getSourcePositions(P position, L condition, double maxDistance) {
         return this.getMapping()
                 .entrySet()
                 .stream()
@@ -67,8 +64,8 @@ public abstract class SignalingMovingItemTracker<P extends Position<P>, L, I ext
      * @param maxDistance the distance range of the capture.
      * @return the set of nearby positions to the given item where the given condition is signaled.
      */
-    public Set<P> getSources(I item, L condition, double maxDistance) {
+    public Set<P> getSourcePositions(I item, L condition, double maxDistance) {
         if (!this.isPresent(item)) return new HashSet<>();
-        else return getSources(this.getCurrentPosition(item).get(), condition, maxDistance);
+        else return getSourcePositions(this.getCurrentPosition(item).get(), condition, maxDistance);
     }
 }

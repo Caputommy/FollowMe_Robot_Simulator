@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SurfacePositionTest {
 
-    private long seed = 123456789;
+    private static final long SEED = 123456789;
 
     @Test
     public void shouldMapCoordinates () {
@@ -82,7 +82,7 @@ public class SurfacePositionTest {
         for (int i = -2; i<2; i++) {
             rx = new DoubleRange(i, i+4);
             ry = new DoubleRange(i, i+4);
-            p = SurfacePosition.getRandomPositionInRanges(rx, ry, seed);
+            p = SurfacePosition.randomPositionInRanges(rx, ry, SEED);
             assertTrue((i <= p.getX() && p.getX() <= i+4) && (i <= p.getY() && p.getY() <= i+4));
         }
 

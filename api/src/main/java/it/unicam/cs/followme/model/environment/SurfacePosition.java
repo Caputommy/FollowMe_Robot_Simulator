@@ -1,6 +1,5 @@
 package it.unicam.cs.followme.model.environment;
 
-import it.unicam.cs.followme.model.simulation.ProgramLine;
 import it.unicam.cs.followme.util.DoubleBiFunction;
 import it.unicam.cs.followme.util.DoubleRange;
 
@@ -43,7 +42,7 @@ public record SurfacePosition(double x, double y) implements Position<SurfacePos
      * @param rangeY the range from witch y coordinate is chosen
      * @return the random position.
      */
-    public static SurfacePosition getRandomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY) {
+    public static SurfacePosition randomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY) {
         return new SurfacePosition(rangeX.getRandomDoubleInRange(), rangeY.getRandomDoubleInRange());
     }
 
@@ -56,7 +55,7 @@ public record SurfacePosition(double x, double y) implements Position<SurfacePos
      * @param seed the seed of the random position.
      * @return the random position.
      */
-    public static SurfacePosition getRandomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY, long seed) {
+    public static SurfacePosition randomPositionInRanges(DoubleRange rangeX, DoubleRange rangeY, long seed) {
         return new SurfacePosition(rangeX.getRandomDoubleInRange(seed), rangeY.getRandomDoubleInRange(seed));
     }
 

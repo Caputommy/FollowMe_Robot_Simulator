@@ -1,6 +1,6 @@
 package it.unicam.cs.followme.model.items;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Classes implementing this interface consist of entities that are able to signal self conditions, in
@@ -11,11 +11,11 @@ import java.util.List;
 public interface ConditionSignaler<L> {
 
     /**
-     * Returns the list of labels representing the conditions signaled by this signaler.
+     * Returns the set of labels representing the conditions signaled by this signaler.
      *
-     * @return the list of labels
+     * @return the set of labels
      */
-    List<L> getConditions ();
+    Set<L> getConditions ();
 
     /**
      * Adds a condition to those that are signaled by this signaler.

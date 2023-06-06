@@ -44,7 +44,7 @@ public class FollowMeAreaTest {
         double inscribedSquareSide = DEFAULT_CIRCLE_RADIUS*Math.sqrt(2);
         DoubleRange admittedRange = new DoubleRange(-(inscribedSquareSide/2), inscribedSquareSide/2);
         for (int i=0; i<10; i++) {
-            randomPosition = SurfacePosition.getRandomPositionInRanges(admittedRange, admittedRange, SEED+i);
+            randomPosition = SurfacePosition.randomPositionInRanges(admittedRange, admittedRange, SEED+i);
             assertTrue(circle.includes(randomPosition));
         }
     }
@@ -61,7 +61,7 @@ public class FollowMeAreaTest {
         DoubleRange admittedHeightRange = new DoubleRange(-(DEFAULT_RECTANGLE_HEIGHT/2), DEFAULT_RECTANGLE_HEIGHT/2);
         for (int i=0; i<10; i++) {
             randomPosition =
-                    SurfacePosition.getRandomPositionInRanges(admittedWidthRange, admittedHeightRange, SEED+i);
+                    SurfacePosition.randomPositionInRanges(admittedWidthRange, admittedHeightRange, SEED+i);
             assertTrue(rectangle.includes(randomPosition));
         }
     }

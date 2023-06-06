@@ -1,7 +1,5 @@
 package it.unicam.cs.followme.model.items;
 
-import it.unicam.cs.followme.model.items.MovingItem;
-
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,7 +22,7 @@ public interface MovingItemTracker<P, I extends MovingItem<P>> {
      * @return true if the item has been successfully added and the status of the tracker changed as a result
      * of the invocation.
      */
-    boolean addMovingItem(I item, P position);
+    boolean addItem(I item, P position);
 
     /**
      * Checks if the given item is currently tracked by this tracker. More formally, returns true if and only
@@ -35,6 +33,11 @@ public interface MovingItemTracker<P, I extends MovingItem<P>> {
      * @return true if this tracker is already tracking an item that is equal to the given one.
      */
     boolean isPresent (I item);
+
+    /**
+     * Removes all the tracked items from this tracker.
+     */
+    void clear();
 
     /**
      * Returns the current position associated with the given item according to this tracker. More formally,
@@ -57,11 +60,8 @@ public interface MovingItemTracker<P, I extends MovingItem<P>> {
     /**
      * Moves all the items tacked by this tracker according to their motion configuration for the given
      * amount of units of time, and updates the state of this tracker accordingly.
-     * Furthermore, the new state of the tracker is returned as a map that associates each item tracked to
-     * their new position in the updated tracker.
      *
      * @param time the amount of time to make items move.
-     * @return the mapping of the new positions of the items.
      */
-    Map<I, P> moveAll (double time);
+    void moveAll (double time);
 }

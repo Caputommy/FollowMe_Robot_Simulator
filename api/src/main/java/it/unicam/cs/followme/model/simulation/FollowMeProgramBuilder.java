@@ -92,7 +92,7 @@ public class FollowMeProgramBuilder
     @Override
     public void followCommand(String label, double[] args) {
         ProgramInstruction<I> followInstruction = new ProgramInstruction<>((item) -> {
-            Set<SurfacePosition> inRangePositions = itemTracker.getSources(item, new FollowMeLabel(label), args[0]);
+            Set<SurfacePosition> inRangePositions = itemTracker.getSourcePositions(item, new FollowMeLabel(label), args[0]);
             if (inRangePositions.isEmpty()) {
                 DoubleRange range = new DoubleRange(-args[0], args[0]);
                 setRandomDirectionFromRelativeRanges(item, range, range);
@@ -169,14 +169,14 @@ public class FollowMeProgramBuilder
 
     private void setRandomDirectionFromAbsoluteRanges (I item, DoubleRange rangeX, DoubleRange rangeY) {
         item.setCurrentDirection(new SurfaceDirection(
-                SurfacePosition.getRandomPositionInRanges(rangeX, rangeY)
+                SurfacePosition.randomPositionInRanges(rangeX, rangeY)
                         .combineCoordinates((x1, x2) -> x1 - x2, itemTracker.getCurrentPosition(item).get())
         ));
     }
 
     private void setRandomDirectionFromRelativeRanges (I item, DoubleRange rangeX, DoubleRange rangeY) {
         item.setCurrentDirection(new SurfaceDirection(
-                SurfacePosition.getRandomPositionInRanges(rangeX, rangeY))
+                SurfacePosition.randomPositionInRanges(rangeX, rangeY))
         );
     }
 }
