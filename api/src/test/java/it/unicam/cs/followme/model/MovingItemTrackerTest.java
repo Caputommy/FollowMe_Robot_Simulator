@@ -88,6 +88,22 @@ public class MovingItemTrackerTest {
 
     @Test
     public void shouldMoveAll() {
-        //TODO
+        robots.get(1).setCurrentDirection(new SurfaceDirection (1, 0));
+        robots.get(1).setCurrentVelocity(1);
+        robots.get(2).setCurrentDirection(new SurfaceDirection (0.5, -0.5));
+        robots.get(2).setCurrentVelocity(2);
+        robots.get(3).setCurrentDirection(new SurfaceDirection (1, 0));
+        robots.get(3).setCurrentVelocity(0);
+
+        tracker.addItem(robots.get(1), new SurfacePosition(2,3));
+        tracker.addItem(robots.get(2), new SurfacePosition(5,-3));
+        tracker.addItem(robots.get(3), new SurfacePosition(0.1,0.55));
+
+        tracker.moveAll(1);
+
+        assertEquals(new SurfacePosition (3, 3), tracker.getCurrentPosition(robots.get(1)).get());
+        assertEquals(new SurfacePosition (5 - (2/Math.sqrt(2)), -3 - (2/Math.sqrt(2))),
+                tracker.getCurrentPosition(robots.get(2)).get());
+        assertEquals(new SurfacePosition (0.1, 0.55), tracker.getCurrentPosition(robots.get(1)).get());
     }
 }

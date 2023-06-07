@@ -18,7 +18,7 @@ public class FollowMeAreaTest {
     @Test
     public void shouldConstructCircleFromData() {
         ShapeData circleData = new ShapeData("Circle_label", "CIRCLE", new double[]{0, 0, DEFAULT_CIRCLE_RADIUS});
-        FollowMeArea area = FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR.constructShape(circleData);
+        FollowMeArea area = FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR.constructArea(circleData).getKey();
         assertTrue(area instanceof FollowMeCircleArea);
         FollowMeCircleArea circle = (FollowMeCircleArea) area;
         assertTrue(circle.getLabel().equals(new FollowMeLabel("Circle_label")));
@@ -28,7 +28,7 @@ public class FollowMeAreaTest {
     public void shouldConstructRectangleFromData() {
         ShapeData rectangleData = new ShapeData("Rectangle_label", "RECTANGLE",
                 new double[]{DEFAULT_RECTANGLE_WIDTH, DEFAULT_RECTANGLE_HEIGHT});
-        FollowMeArea area = FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR.constructShape(rectangleData);
+        FollowMeArea area = FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR.constructArea(rectangleData).getKey();
         assertTrue(area instanceof FollowMeRectangleArea);
         FollowMeRectangleArea rectangle = (FollowMeRectangleArea) area;
         assertTrue(rectangle.getLabel().equals(new FollowMeLabel("Rectangle_label")));
