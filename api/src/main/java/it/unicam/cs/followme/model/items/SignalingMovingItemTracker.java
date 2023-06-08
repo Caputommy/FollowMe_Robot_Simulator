@@ -19,6 +19,22 @@ public abstract class SignalingMovingItemTracker<P extends Position<P>, L, I ext
         implements MovingItemTracker<P, I> {
 
     /**
+     * Factory method that constructs and returns an item tracker which initial state is described
+     * by a given map of items and positions.
+     *
+     * @param map the map of items and positions.
+     * @return a new <code>SignalingMovingItemTracker</code> object with the given initial configuration.
+     * @param <P> type representing the position of the items.
+     * @param <L> type representing the label of the signaled conditions.
+     * @param <I> type representing the moving items.
+     */
+    public static <P extends Position<P>, L, I extends ConditionSignaler<L> & MovingItem<P>> SignalingMovingItemTracker<P, L, I> trackerOf(Map<I, P> map) {
+        SignalingMovingItemTracker<P, L, I> tracker = new MapSignalingMovingItemTracker<>();
+        tracker.addAllItems(map);
+        return tracker;
+    }
+
+    /**
      * Given a position and a distance, returns the condition labels mapped with the position of the items they are
      * signaled by such that those positions are in the range of the given distance from the given position.
      *

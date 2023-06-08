@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model.simulation;
+package it.unicam.cs.followme.model.program;
 
 import java.util.Optional;
 import java.util.function.Predicate;

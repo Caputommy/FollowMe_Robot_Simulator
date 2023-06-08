@@ -16,15 +16,12 @@ import java.util.stream.Collectors;
  * @param <I> type representing the moving items.
  */
 public class MapSignalingMovingItemTracker<P extends Position<P>, L, I extends ConditionSignaler<L> & MovingItem<P>>
-        extends  SignalingMovingItemTracker<P, L, I>{
+        extends SignalingMovingItemTracker<P, L, I>{
 
     private final Map<I, P> map;
 
     public MapSignalingMovingItemTracker() {
-        this(new HashMap<>());
-    }
-    public MapSignalingMovingItemTracker(Map<I, P> map) {
-        this.map = map;
+        this.map = new HashMap<>();
     }
 
     @Override

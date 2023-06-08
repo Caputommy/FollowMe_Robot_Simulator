@@ -1,12 +1,15 @@
-package it.unicam.cs.followme.model.simulation;
+package it.unicam.cs.followme.model.followme;
 
 import it.unicam.cs.followme.model.environment.Environment;
 import it.unicam.cs.followme.model.environment.SurfacePosition;
-import it.unicam.cs.followme.model.followme.FollowMeLabel;
 import it.unicam.cs.followme.model.items.ConditionSignaler;
 import it.unicam.cs.followme.model.items.SignalingMovingItemTracker;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.items.UniformMotionMovingItem;
+import it.unicam.cs.followme.model.program.ProgramCondition;
+import it.unicam.cs.followme.model.program.ProgramInstruction;
+import it.unicam.cs.followme.model.program.ProgramLine;
+import it.unicam.cs.followme.model.program.ProgramVariable;
 import it.unicam.cs.followme.util.DoubleRange;
 import it.unicam.cs.followme.utilities.FollowMeParserHandler;
 

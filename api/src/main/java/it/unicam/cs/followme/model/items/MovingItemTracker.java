@@ -2,6 +2,7 @@ package it.unicam.cs.followme.model.items;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Classes implementing this interface take track of the position of a set of moving items over time.
@@ -20,9 +21,26 @@ public interface MovingItemTracker<P, I extends MovingItem<P>> {
      * @param item the moving item to add to this tracker.
      * @param position the position where to deploy the item in this tracker.
      * @return true if the item has been successfully added and the status of the tracker changed as a result
-     * of the invocation.
+     * of the call.
      */
     boolean addItem(I item, P position);
+
+    /**
+     * Adds the items in the given mapping to this tracker in their respective mapped positions.
+     * If all the given items already exists in this tracker, a false value is returned and the invocation
+     * of this method has no effect on the status of the tracker.
+     *
+     * @param items the moving items mapped with their positions to add to this tracker.
+     * @return true if at least one item has been successfully added and the status of the tracker changed as a result
+     * of the call.
+     */
+    default boolean addAllItems(Map<I, P> items) {
+        return items.entrySet()
+                .stream()
+                .map(e -> addItem(e.getKey(), e.getValue()))
+                .reduce(Boolean::logicalOr)
+                .orElse(false);
+    }
 
     /**
      * Checks if the given item is currently tracked by this tracker. More formally, returns true if and only
@@ -56,6 +74,15 @@ public interface MovingItemTracker<P, I extends MovingItem<P>> {
      * @return the current stat of this tracker.
      */
     Map<I, P> getMapping ();
+
+    /**
+     * Returns the set of moving item that are currently tracked by this tracker.
+     *
+     * @return the set of items tracked.
+     */
+    default Set<I> getItems() {
+        return this.getMapping().keySet();
+    }
 
     /**
      * Moves all the items tacked by this tracker according to their motion configuration for the given

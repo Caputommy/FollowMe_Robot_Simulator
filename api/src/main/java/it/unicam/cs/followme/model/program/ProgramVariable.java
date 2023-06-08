@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model.simulation;
+package it.unicam.cs.followme.model.program;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +24,6 @@ public final class ProgramVariable<I, T> {
     }
 
     public void setValue(I item, T newValue) {
-        this.valueMap.put(item, newValue);
+        valueMap.put(item, newValue);
     }
 }
