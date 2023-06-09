@@ -8,8 +8,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Instances of this class are particular moving item trackers that take track of items that can also signal
- * conditions and, thus, can track the origin of conditions signaled by those items.
+ * An nstance of this class is a particular {@link MovingItemTracker} that takes track of items that can also signal
+ * conditions (i. e. implement {@link ConditionSignaler}) and, thus, can track the origin of conditions signaled
+ * by those items.
  *
  * @param <P> type representing the position of the items.
  * @param <L> type representing the label of the signaled conditions.
@@ -68,7 +69,7 @@ public abstract class SignalingMovingItemTracker<P extends Position<P>, L, I ext
                 .filter(e -> e.getKey().getConditions().contains(condition))
                 .filter(e -> (e.getValue().getDistanceFrom(position) <= maxDistance))
                 .map(Map.Entry::getValue)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(HashSet::new));
     }
 
     /**

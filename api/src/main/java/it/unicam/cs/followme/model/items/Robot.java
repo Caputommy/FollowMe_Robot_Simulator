@@ -2,6 +2,13 @@ package it.unicam.cs.followme.model.items;
 
 import java.util.*;
 
+/**
+ * An instance of this class is a simple {@link UniformMotionMovingItem} that can also signal a set of
+ * conditions (i. e. implements {@link ConditionSignaler}).
+ *
+ * @param <P> type representing the positions the item can move among.
+ * @param <L> type representing the labels of the conditions.
+ */
 public class Robot<P, L> extends UniformMotionMovingItem<P> implements ConditionSignaler<L> {
     private Set<L> signaledConditions;
 

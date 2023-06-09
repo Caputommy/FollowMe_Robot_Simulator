@@ -144,8 +144,8 @@ public record SurfacePosition(double x, double y) implements Position<SurfacePos
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
         SurfacePosition other = (SurfacePosition) o;
-        return (this.getX() - other.getX()) < EPSILON &&
-                (this.getY() - other.getY()) < EPSILON;
+        return (Math.abs(this.getX() - other.getX())) < EPSILON &&
+                (Math.abs(this.getY() - other.getY())) < EPSILON;
     }
 
     @Override

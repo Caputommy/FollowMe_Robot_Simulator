@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Classes implementing this interface take track of the position of a set of moving items over time.
+ * Classes implementing this interface take track of the position of a set of {@link MovingItem} objects over time.
  *
  * @param <P> type representing the position of the items.
  * @param <I> type representing the moving items.

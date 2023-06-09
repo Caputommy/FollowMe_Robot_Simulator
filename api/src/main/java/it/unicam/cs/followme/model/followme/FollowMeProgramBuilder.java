@@ -17,8 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
-public class FollowMeProgramBuilder
-        <I extends UniformMotionMovingItem<SurfacePosition> & ConditionSignaler<FollowMeLabel>>
+public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePosition> & ConditionSignaler<FollowMeLabel>>
         implements FollowMeParserHandler {
     private final Environment<SurfacePosition, FollowMeLabel> environment;
     private final SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, I> itemTracker;
@@ -45,7 +44,7 @@ public class FollowMeProgramBuilder
 
     @Override
     public void parsingStarted() {
-        this.headLine = new ProgramCondition<I>((item) -> true);
+        this.headLine = new ProgramCondition<I>((item) -> false);
         this.currentLine = this.headLine;
         this.conditionStack = new Stack<>();
     }
@@ -101,6 +100,7 @@ public class FollowMeProgramBuilder
                 setRandomDirectionFromRelativeRanges(item, range, range);
             }
             else item.setCurrentDirection(new SurfaceDirection(SurfacePosition.averageLocation(inRangePositions).get()));
+            item.setCurrentVelocity(args[1]);
         });
         setCurrentLine(followInstruction);
     }
@@ -130,6 +130,7 @@ public class FollowMeProgramBuilder
             return (counterVariable.getValue(item) >= 0);
         });
         setCurrentLine(repeatCondition);
+        conditionStack.push(repeatCondition);
     }
 
     @Override
@@ -140,12 +141,14 @@ public class FollowMeProgramBuilder
                     .contains(new FollowMeLabel(label));
         });
         setCurrentLine(untilCondition);
+        conditionStack.push(untilCondition);
     }
 
     @Override
     public void doForeverStart() {
         ProgramCondition<I> foreverCondition = new ProgramCondition<>((item) -> true);
         setCurrentLine(foreverCondition);
+        conditionStack.push(foreverCondition);
     }
 
     @Override
@@ -161,11 +164,11 @@ public class FollowMeProgramBuilder
     private void setCurrentLine (ProgramLine<I> newProgramLine) {
         if (this.currentLine instanceof ProgramCondition<I> currentCondition) {
             if (!this.conditionStack.isEmpty() && this.conditionStack.peek().equals(currentCondition))
-                currentCondition.setIfTrue(Optional.ofNullable(newProgramLine));
-            else currentCondition.setIfFalse(Optional.ofNullable(newProgramLine));
+                currentCondition.setIfTrue(Optional.of(newProgramLine));
+            else currentCondition.setIfFalse(Optional.of(newProgramLine));
         }
         else if (this.currentLine instanceof ProgramInstruction<I> currentInstruction) {
-            currentInstruction.setNext(Optional.ofNullable(newProgramLine));
+            currentInstruction.setNext(Optional.of(newProgramLine));
         }
         this.currentLine = newProgramLine;
     }

@@ -4,7 +4,7 @@ import it.unicam.cs.followme.model.environment.SurfacePosition;
 import it.unicam.cs.followme.util.DoubleRange;
 
 /**
- * Represents a direction in the bidimensional surface as a vector of magnitude one, having its end point
+ * Represents a direction in the two-dimensional surface as a vector of magnitude one, having its end point
  * in a specified <code>SurfacePosition</code> and application point in the origin.
  */
 public class SurfaceDirection implements Direction<SurfacePosition>{

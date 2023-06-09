@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 /**
  * Classes implementing this interface are used to represent a spatial configuration of a set of
- * deployed labeled areas.
+ * deployed labeled {@link Area} objects.
  *
  * @param <P> type representing the positions
  * @param <L> type representing the labels

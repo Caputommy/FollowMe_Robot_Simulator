@@ -23,6 +23,14 @@ public final class ProgramInstruction<I> implements ProgramLine<I> {
         this.next = nextInstruction;
     }
 
+    public Consumer<I> getInstruction() {
+        return instruction;
+    }
+
+    public Optional<ProgramLine<I>> getNext() {
+        return next;
+    }
+
     /**
      * Sets the next program line to be executed after this instruction.
      *

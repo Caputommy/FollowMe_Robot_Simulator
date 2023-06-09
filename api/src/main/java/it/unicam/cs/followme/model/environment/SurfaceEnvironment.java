@@ -6,9 +6,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Instances of this class are hash map implemented environments based on surface positions.
+ * An instance of this class is a hash map implemented {@link Environment} based on {@link SurfacePosition} positions.
  *
- * @param <L> type representing the labels
+ * @param <L> type representing the labels.
  */
 public class SurfaceEnvironment<L> implements Environment<SurfacePosition, L> {
 

@@ -23,6 +23,18 @@ public final class ProgramCondition<I> implements ProgramLine<I> {
         this.nextIfFalse = Optional.empty();
     }
 
+    public Predicate<I> getCondition() {
+        return condition;
+    }
+
+    public Optional<ProgramLine<I>> getNextIfTrue() {
+        return nextIfTrue;
+    }
+
+    public Optional<ProgramLine<I>> getNextIfFalse() {
+        return nextIfFalse;
+    }
+
     /**
      * Sets the next program line to be executed after checking this condition in the case
      * it is evaluated as true.
