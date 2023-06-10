@@ -1,9 +1,8 @@
-package it.unicam.cs.followme.model.followme;
+package it.unicam.cs.followme.model.environment;
 
-import it.unicam.cs.followme.model.environment.SurfacePosition;
 import it.unicam.cs.followme.util.DoubleRange;
 
-public class FollowMeRectangleArea extends FollowMeArea {
+public class SurfaceRectangleArea<L> extends SurfaceArea<L> {
 
     private final double width;
     private final double height;
@@ -12,19 +11,11 @@ public class FollowMeRectangleArea extends FollowMeArea {
 
     private static final double DEFAULT_SIZE = 1.0;
 
-    public FollowMeRectangleArea(String label, double width, double height) {
-        this(new FollowMeLabel(label), width, height);
-    }
-
-    public FollowMeRectangleArea(String label) {
+    public SurfaceRectangleArea(L label) {
         this(label, DEFAULT_SIZE, DEFAULT_SIZE);
     }
 
-    public FollowMeRectangleArea(FollowMeLabel label) {
-        this(label, DEFAULT_SIZE, DEFAULT_SIZE);
-    }
-
-    public FollowMeRectangleArea(FollowMeLabel label, double width, double height) {
+    public SurfaceRectangleArea(L label, double width, double height) {
         super(label);
         this.width = width;
         this.height = height;

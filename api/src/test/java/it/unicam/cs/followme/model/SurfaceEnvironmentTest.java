@@ -1,9 +1,8 @@
 package it.unicam.cs.followme.model;
 
 import it.unicam.cs.followme.model.environment.*;
-import it.unicam.cs.followme.model.followme.FollowMeCircleArea;
-import it.unicam.cs.followme.model.followme.FollowMeLabel;
-import it.unicam.cs.followme.model.followme.FollowMeRectangleArea;
+import it.unicam.cs.followme.model.environment.SurfaceCircleArea;
+import it.unicam.cs.followme.model.environment.SurfaceRectangleArea;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +18,10 @@ public class SurfaceEnvironmentTest {
     @BeforeAll
     public static void buildEnvironment() {
         sampleAreas = new Area[]{
-                new FollowMeCircleArea("Circle_label_1", 3.0),
-                new FollowMeCircleArea("Circle_label_2", 6.0),
-                new FollowMeRectangleArea("Rectangle_label_1", 4.0, 6.0),
-                new FollowMeRectangleArea("Rectangle_label_2", 10.0, 2.0)
+                new SurfaceCircleArea<>(new FollowMeLabel("Circle_label_1"), 3.0),
+                new SurfaceCircleArea<>(new FollowMeLabel("Circle_label_2"), 6.0),
+                new SurfaceRectangleArea<>(new FollowMeLabel("Rectangle_label_1"), 4.0, 6.0),
+                new SurfaceRectangleArea<>(new FollowMeLabel("Rectangle_label_2"), 10.0, 2.0)
         };
         env = new SurfaceEnvironment<>();
         env.addArea(sampleAreas[0], new SurfacePosition(-2, 2));

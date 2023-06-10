@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model.followme;
+package it.unicam.cs.followme.model;
 
 import it.unicam.cs.followme.model.environment.Environment;
 import it.unicam.cs.followme.model.environment.SurfacePosition;
@@ -135,11 +135,11 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
 
     @Override
     public void untilCommandStart(String label) {
-        ProgramCondition<I> untilCondition = new ProgramCondition<>((item) -> {
-            return environment
+        ProgramCondition<I> untilCondition = new ProgramCondition<>((item) -> (
+            !environment
                     .getLabels(itemTracker.getCurrentPosition(item).get())
-                    .contains(new FollowMeLabel(label));
-        });
+                    .contains(new FollowMeLabel(label))
+        ));
         setCurrentLine(untilCondition);
         conditionStack.push(untilCondition);
     }

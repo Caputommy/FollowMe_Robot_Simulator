@@ -1,15 +1,18 @@
 package it.unicam.cs.followme.model;
 
-import it.unicam.cs.followme.model.environment.*;
-import it.unicam.cs.followme.model.followme.*;
+import it.unicam.cs.followme.model.environment.SurfaceArea;
+import it.unicam.cs.followme.model.environment.SurfaceCircleArea;
+import it.unicam.cs.followme.model.environment.SurfacePosition;
+import it.unicam.cs.followme.model.environment.SurfaceRectangleArea;
 import it.unicam.cs.followme.util.DoubleRange;
 import it.unicam.cs.followme.utilities.ShapeData;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.testng.AssertJUnit.assertEquals;
 
-public class FollowMeAreaTest {
+public class SurfaceAreaTest {
     private static final long SEED = 123456789;
     private static final double DEFAULT_CIRCLE_RADIUS = 3.0;
     private static final double DEFAULT_RECTANGLE_WIDTH = 4.0;
@@ -18,28 +21,29 @@ public class FollowMeAreaTest {
     @Test
     public void shouldConstructCircleFromData() {
         ShapeData circleData = new ShapeData("Circle_label", "CIRCLE", new double[]{0, 0, DEFAULT_CIRCLE_RADIUS});
-        FollowMeArea area = FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR.constructArea(circleData).getKey();
-        assertTrue(area instanceof FollowMeCircleArea);
-        FollowMeCircleArea circle = (FollowMeCircleArea) area;
-        assertTrue(circle.getLabel().equals(new FollowMeLabel("Circle_label")));
-        assertTrue(Double.compare(DEFAULT_CIRCLE_RADIUS, circle.getRadius()) == 0);
+        SurfaceArea<FollowMeLabel> area = FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR.constructArea(circleData).getKey();
+        assertTrue(area instanceof SurfaceCircleArea<FollowMeLabel>);
+        SurfaceCircleArea<FollowMeLabel> circle = (SurfaceCircleArea<FollowMeLabel>) area;
+        assertEquals(new FollowMeLabel("Circle_label"), circle.getLabel());
+        assertEquals(DEFAULT_CIRCLE_RADIUS, circle.getRadius());
     }
 
+    @Test
     public void shouldConstructRectangleFromData() {
         ShapeData rectangleData = new ShapeData("Rectangle_label", "RECTANGLE",
-                new double[]{DEFAULT_RECTANGLE_WIDTH, DEFAULT_RECTANGLE_HEIGHT});
-        FollowMeArea area = FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR.constructArea(rectangleData).getKey();
-        assertTrue(area instanceof FollowMeRectangleArea);
-        FollowMeRectangleArea rectangle = (FollowMeRectangleArea) area;
-        assertTrue(rectangle.getLabel().equals(new FollowMeLabel("Rectangle_label")));
-        assertTrue(Double.compare(DEFAULT_RECTANGLE_WIDTH, rectangle.getWidth()) == 0);
-        assertTrue(Double.compare(DEFAULT_RECTANGLE_HEIGHT, rectangle.getHeight()) == 0);
+                new double[]{0, 0, DEFAULT_RECTANGLE_WIDTH, DEFAULT_RECTANGLE_HEIGHT});
+        SurfaceArea<FollowMeLabel> area = FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR.constructArea(rectangleData).getKey();
+        assertTrue(area instanceof SurfaceRectangleArea<FollowMeLabel>);
+        SurfaceRectangleArea<FollowMeLabel> rectangle = (SurfaceRectangleArea<FollowMeLabel>) area;
+        assertEquals(new FollowMeLabel("Rectangle_label"), rectangle.getLabel());
+        assertEquals(DEFAULT_RECTANGLE_WIDTH, rectangle.getWidth());
+        assertEquals(DEFAULT_RECTANGLE_HEIGHT, rectangle.getHeight());
     }
 
 
     @Test
     public void shouldBeIncludedInCircle () {
-        FollowMeCircleArea circle = new FollowMeCircleArea("Circle_label_1", DEFAULT_CIRCLE_RADIUS);
+        SurfaceCircleArea<FollowMeLabel> circle = new SurfaceCircleArea<>(new FollowMeLabel("Circle_label_1"), DEFAULT_CIRCLE_RADIUS);
         SurfacePosition randomPosition;
         double inscribedSquareSide = DEFAULT_CIRCLE_RADIUS*Math.sqrt(2);
         DoubleRange admittedRange = new DoubleRange(-(inscribedSquareSide/2), inscribedSquareSide/2);
@@ -53,9 +57,10 @@ public class FollowMeAreaTest {
         //TODO
     }
 
+    @Test
     public void shouldBeIncludedInRectangle () {
-        FollowMeRectangleArea rectangle =
-                new FollowMeRectangleArea("Rectangle_label_1", DEFAULT_RECTANGLE_WIDTH, DEFAULT_RECTANGLE_HEIGHT);
+        SurfaceRectangleArea<FollowMeLabel> rectangle =
+                new SurfaceRectangleArea<>(new FollowMeLabel("Rectangle_label_1"), DEFAULT_RECTANGLE_WIDTH, DEFAULT_RECTANGLE_HEIGHT);
         SurfacePosition randomPosition;
         DoubleRange admittedWidthRange = new DoubleRange(-(DEFAULT_RECTANGLE_WIDTH/2), DEFAULT_RECTANGLE_HEIGHT/2);
         DoubleRange admittedHeightRange = new DoubleRange(-(DEFAULT_RECTANGLE_HEIGHT/2), DEFAULT_RECTANGLE_HEIGHT/2);
@@ -70,10 +75,11 @@ public class FollowMeAreaTest {
         //TODO
     }
 
+    @Test
     public void shouldBeInvalidLabel() {
         assertThrows(IllegalArgumentException.class,
-                () -> new FollowMeCircleArea("#@%!", DEFAULT_CIRCLE_RADIUS));
+                () -> new SurfaceCircleArea<>(new FollowMeLabel("#@%!"), DEFAULT_CIRCLE_RADIUS));
         assertThrows(IllegalArgumentException.class,
-                () -> new FollowMeCircleArea("Circle_l@bel", DEFAULT_CIRCLE_RADIUS));
+                () -> new SurfaceCircleArea<>(new FollowMeLabel("Circle_l@bel"), DEFAULT_CIRCLE_RADIUS));
     }
 }

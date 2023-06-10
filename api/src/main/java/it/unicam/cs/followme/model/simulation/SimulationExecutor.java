@@ -1,5 +1,7 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.simulation;
 
+import it.unicam.cs.followme.model.environment.Position;
+import it.unicam.cs.followme.model.items.ConditionSignaler;
 import it.unicam.cs.followme.model.items.MovingItem;
 
 import java.util.Map;

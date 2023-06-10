@@ -1,7 +1,6 @@
 package it.unicam.cs.followme.model;
 
 import it.unicam.cs.followme.model.environment.SurfacePosition;
-import it.unicam.cs.followme.model.followme.FollowMeLabel;
 import it.unicam.cs.followme.model.items.Robot;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.program.*;

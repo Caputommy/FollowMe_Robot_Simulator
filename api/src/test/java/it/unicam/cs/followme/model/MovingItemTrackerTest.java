@@ -1,7 +1,6 @@
 package it.unicam.cs.followme.model;
 
 import it.unicam.cs.followme.model.environment.SurfacePosition;
-import it.unicam.cs.followme.model.followme.FollowMeLabel;
 import it.unicam.cs.followme.model.items.MapSignalingMovingItemTracker;
 import it.unicam.cs.followme.model.items.MovingItemTracker;
 import it.unicam.cs.followme.model.items.Robot;

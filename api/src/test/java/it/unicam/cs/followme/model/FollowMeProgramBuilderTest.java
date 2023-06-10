@@ -1,10 +1,6 @@
 package it.unicam.cs.followme.model;
 
-import it.unicam.cs.followme.model.environment.Environment;
-import it.unicam.cs.followme.model.environment.SurfaceEnvironment;
-import it.unicam.cs.followme.model.environment.SurfacePosition;
-import it.unicam.cs.followme.model.followme.FollowMeLabel;
-import it.unicam.cs.followme.model.followme.FollowMeProgramBuilder;
+import it.unicam.cs.followme.model.environment.*;
 import it.unicam.cs.followme.model.items.MapSignalingMovingItemTracker;
 import it.unicam.cs.followme.model.items.Robot;
 import it.unicam.cs.followme.model.items.SignalingMovingItemTracker;
@@ -40,8 +36,8 @@ public class FollowMeProgramBuilderTest {
         builder.parsingStarted();
         builder.moveCommand(new double[]{0, 1, 1.5});
         builder.doForeverStart();
-        builder.signalCommand("label_1");
-        builder.unsignalCommand("label_1");
+            builder.signalCommand("label_1");
+            builder.unsignalCommand("label_1");
         builder.doneCommand();
         builder.parsingDone();
         program = builder.getProgramHeadLine();
@@ -62,11 +58,42 @@ public class FollowMeProgramBuilderTest {
     }
 
     private void buildProgram3() {
-        //TODO move - wait - repeat
+        FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
+                new FollowMeProgramBuilder<>(environment, tracker);
+        builder.parsingStarted();
+        builder.moveCommand(new double[]{0, 1, 1.5});
+        builder.waitCommand(10);
+        builder.stopCommand();
+        builder.parsingDone();
+        program = builder.getProgramHeadLine();
     }
 
     private void buildProgram4() {
+        FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
+                new FollowMeProgramBuilder<>(environment, tracker);
+        builder.parsingStarted();
+        builder.repeatCommandStart(4);
+            builder.signalCommand("Label_1");
+            builder.unsignalCommand("Label_1");
+        builder.doneCommand();
+        builder.parsingDone();
+        program = builder.getProgramHeadLine();
+    }
+
+    private void buildProgram5() {
         //TODO add area environment, until - moverandom
+        tracker.addItem(robot, new SurfacePosition(-4,0));
+        environment.addArea(new SurfaceCircleArea<>(new FollowMeLabel("Circle_label"), 0.5), new SurfacePosition(2,0));
+        FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
+                new FollowMeProgramBuilder<>(environment, tracker);
+        builder.parsingStarted();
+        builder.moveCommand(new double[]{1, 0, 1});
+        builder.untilCommandStart("Circle_label");
+            builder.waitCommand(1);
+        builder.doneCommand();
+        builder.stopCommand();
+        builder.parsingDone();
+        program = builder.getProgramHeadLine();
     }
 
     @Test
@@ -154,19 +181,64 @@ public class FollowMeProgramBuilderTest {
     @Test
     public void shouldBuildWait() {
         buildProgram3();
-        //TODO
+        ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
+
+        execution.executeSteps(2);
+        assertEquals(new SurfaceDirection(0,1), robot.getCurrentDirection());
+        assertEquals(1.5, robot.getCurrentVelocity());
+        assertEquals(Set.of(), robot.getConditions());
+
+        execution.executeSteps(9);
+        assertEquals(1.5, robot.getCurrentVelocity());
+
+        execution.executeOneStep();
+        assertEquals(0.0, robot.getCurrentVelocity());
     }
 
     @Test
     public void shouldBuildRepeat() {
-        buildProgram3();
-        //TODO
+        buildProgram4();
+        ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
+        assertEquals(Set.of(), robot.getConditions());
+
+        execution.executeOneStep();
+        assertEquals(Set.of(new FollowMeLabel("Label_1")), robot.getConditions());
+
+        execution.executeOneStep();
+        assertEquals(Set.of(), robot.getConditions());
+
+        execution.executeOneStep();
+        assertEquals(Set.of(new FollowMeLabel("Label_1")), robot.getConditions());
+
+        execution.executeSteps(5);
+        assertEquals(Set.of(), robot.getConditions());
+        assertFalse(execution.hasTerminated());
+
+        execution.executeOneStep();
+        assertTrue(execution.hasTerminated());
     }
 
     @Test
-    public void shouldBuildUnitl() {
-        buildProgram4();
-        //TODO
+    public void shouldBuildUntil() {
+        buildProgram5();
+        ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
+
+        execution.executeOneStep();
+        assertEquals(new SurfaceDirection(1,0), robot.getCurrentDirection());
+        assertEquals(1.0, robot.getCurrentVelocity());
+
+        execution.executeOneStep();
+        tracker.moveAll(1);
+        execution.executeOneStep();
+        assertEquals(1.0, robot.getCurrentVelocity());
+
+        tracker.moveAll(4);
+        execution.executeOneStep();
+        assertEquals(1.0, robot.getCurrentVelocity());
+
+        tracker.moveAll(1);
+        execution.executeOneStep();
+        assertEquals(0.0, robot.getCurrentVelocity());
     }
 
 

@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.model.simulation;
 
 import it.unicam.cs.followme.model.environment.Environment;
 import it.unicam.cs.followme.model.environment.Position;
