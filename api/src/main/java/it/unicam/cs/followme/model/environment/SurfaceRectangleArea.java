@@ -2,6 +2,8 @@ package it.unicam.cs.followme.model.environment;
 
 import it.unicam.cs.followme.util.DoubleRange;
 
+import java.util.Objects;
+
 public class SurfaceRectangleArea<L> extends SurfaceArea<L> {
 
     private final double width;
@@ -34,5 +36,29 @@ public class SurfaceRectangleArea<L> extends SurfaceArea<L> {
     @Override
     public boolean includes(SurfacePosition position) {
         return this.rangeX.hasInRange(position.getX()) && this.rangeY.hasInRange(position.getY());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SurfaceRectangleArea<?> that = (SurfaceRectangleArea<?>) o;
+        return getLabel().equals(that.getLabel()) &&
+                Double.compare(that.getWidth(), getWidth()) == 0 &&
+                Double.compare(that.getHeight(), getHeight()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getWidth(), getHeight());
+    }
+
+    @Override
+    public String toString() {
+        return "SurfaceRectangleArea{" +
+                "label=" + label +
+                ", width=" + width +
+                ", height=" + height +
+                '}';
     }
 }

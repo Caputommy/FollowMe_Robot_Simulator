@@ -1,5 +1,7 @@
 package it.unicam.cs.followme.model.environment;
 
+import java.util.Objects;
+
 public class SurfaceCircleArea<L> extends SurfaceArea<L> {
 
     private final double radius;
@@ -21,5 +23,27 @@ public class SurfaceCircleArea<L> extends SurfaceArea<L> {
     @Override
     public boolean includes(SurfacePosition position) {
         return position.getDistanceFrom(SurfacePosition.ORIGIN) <= this.radius;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SurfaceCircleArea<?> that = (SurfaceCircleArea<?>) o;
+        return getLabel().equals(that.getLabel()) &&
+                Double.compare(that.getRadius(), getRadius()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRadius());
+    }
+
+    @Override
+    public String toString() {
+        return "SurfaceCircleArea{" +
+                "label=" + label +
+                ", radius=" + radius +
+                '}';
     }
 }

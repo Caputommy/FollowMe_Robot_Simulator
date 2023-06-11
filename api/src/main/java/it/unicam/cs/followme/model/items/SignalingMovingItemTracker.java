@@ -73,7 +73,7 @@ public abstract class SignalingMovingItemTracker<P extends Position<P>, L, I ext
     }
 
     /**
-     * Given an item, a condition and a distance, returns the set positions of those items that are signaling the
+     * Given an item, a condition and a distance, returns the set of positions of those items that are signaling the
      * given condition that are not further than the given distance from the given item.
      *
      * @param item the item that captures the conditions.

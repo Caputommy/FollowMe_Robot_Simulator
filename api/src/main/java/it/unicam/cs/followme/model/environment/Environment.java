@@ -1,5 +1,6 @@
 package it.unicam.cs.followme.model.environment;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 public interface Environment<P, L> {
 
     /**
-     * Deploys an area in this environment in such a way that its center will sit in the given position.
+     * Deploys an area in this environment in such a way that its reference point will sit in the given position.
      *
      * @param area the area to be deployed.
      * @param position the position where to deploy the area
@@ -27,6 +28,14 @@ public interface Environment<P, L> {
      * @return the list of labeled areas.
      */
     Set<Area<P, L>> getAreas (P position);
+
+    /**
+     * Returns a map of the areas in this environment and the absolute position of their reference point
+     * in the environment.
+     *
+     * @return the areas in this environment mapped with their deployment position.
+     */
+    Map<Area<P, L>, Set<P>> getMapping();
 
     /**
      * Returns the set of all the active labels of the environment in the given position. The returned list

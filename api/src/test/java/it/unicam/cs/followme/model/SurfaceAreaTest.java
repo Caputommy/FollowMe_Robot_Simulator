@@ -53,10 +53,6 @@ public class SurfaceAreaTest {
         }
     }
 
-    public void shouldBeIncludedInCircle2 () {
-        //TODO
-    }
-
     @Test
     public void shouldBeIncludedInRectangle () {
         SurfaceRectangleArea<FollowMeLabel> rectangle =
@@ -69,10 +65,6 @@ public class SurfaceAreaTest {
                     SurfacePosition.randomPositionInRanges(admittedWidthRange, admittedHeightRange, SEED+i);
             assertTrue(rectangle.includes(randomPosition));
         }
-    }
-
-    public void shouldBeIncludedInRectangle2 () {
-        //TODO
     }
 
     @Test

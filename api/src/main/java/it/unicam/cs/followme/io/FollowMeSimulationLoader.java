@@ -1,4 +1,4 @@
-package it.unicam.cs.followme.model;
+package it.unicam.cs.followme.io;
 
 import it.unicam.cs.followme.model.FollowMeAreaConstructor;
 import it.unicam.cs.followme.model.FollowMeLabel;
@@ -6,7 +6,6 @@ import it.unicam.cs.followme.model.FollowMeProgramBuilder;
 import it.unicam.cs.followme.model.environment.Environment;
 import it.unicam.cs.followme.model.environment.SurfaceEnvironment;
 import it.unicam.cs.followme.model.environment.SurfacePosition;
-import it.unicam.cs.followme.model.io.SimulationLoader;
 import it.unicam.cs.followme.model.items.MapSignalingMovingItemTracker;
 import it.unicam.cs.followme.model.items.Robot;
 import it.unicam.cs.followme.model.items.SignalingMovingItemTracker;
@@ -18,13 +17,14 @@ import it.unicam.cs.followme.utilities.FollowMeParser;
 import it.unicam.cs.followme.utilities.FollowMeParserException;
 import it.unicam.cs.followme.utilities.ShapeData;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
  * A loader used to load a FollowMe simulation.
  * Files and strings loaded into this loader should follow the relative FollowMe syntax.
  */
-public final class FollowMeSimulationLoader implements SimulationLoader<SurfacePosition, Robot<SurfacePosition, FollowMeLabel>> {
+public final class FollowMeSimulationLoader implements SimulationLoader<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> {
 
     private FollowMeParser parser;
     private FollowMeProgramBuilder<Robot<SurfacePosition,FollowMeLabel>> programBuilder;
@@ -32,8 +32,6 @@ public final class FollowMeSimulationLoader implements SimulationLoader<SurfaceP
     private SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> tracker;
     private String programSourceCode;
     private ProgramLine<Robot<SurfacePosition, FollowMeLabel>> program;
-
-    private static final String CORRECT_PARSING_MESSAGE = "Parsing successfully done.";
 
     public FollowMeSimulationLoader() {
         this.environment = new SurfaceEnvironment<>();
@@ -45,43 +43,44 @@ public final class FollowMeSimulationLoader implements SimulationLoader<SurfaceP
     }
 
     @Override
-    public String loadEnvironment(String data) {
+    public Environment<SurfacePosition, FollowMeLabel> loadEnvironment(String data) throws IOException{
         try {
-            buildAndSetEnvironment(parser.parseEnvironment(data));
-            return CORRECT_PARSING_MESSAGE;
+            this.environment = buildEnvironment(parser.parseEnvironment(data));
+            this.program = buildProgram(programSourceCode);
+            return buildEnvironment(parser.parseEnvironment(data));
         }
         catch (FollowMeParserException e) {
-            return e.getMessage();
+            throw new IOException(e.getMessage());
         }
     }
 
-    private void buildAndSetEnvironment(List<ShapeData> shapeDataList) throws FollowMeParserException {
-        this.environment = new SurfaceEnvironment<>();
+    private Environment<SurfacePosition, FollowMeLabel> buildEnvironment(List<ShapeData> shapeDataList) throws FollowMeParserException {
+        Environment<SurfacePosition, FollowMeLabel> newEnvironment = new SurfaceEnvironment<>();
         shapeDataList
                 .stream()
                 .map(FollowMeAreaConstructor.DEFAULT_CONSTRUCTOR::constructArea)
-                .forEach(p -> environment.addArea(p.getKey(), p.getValue()));
-        buildAndSetProgram(this.programSourceCode);
+                .forEach(p -> newEnvironment.addArea(p.getKey(), p.getValue()));
+        return newEnvironment;
     }
 
     @Override
-    public String loadProgram(String program) {
+    public ProgramLine<Robot<SurfacePosition, FollowMeLabel>> loadProgram(String program) throws IOException{
         try {
-            buildAndSetProgram(program);
+            this.program = buildProgram(program);
             this.programSourceCode = program;
-            return CORRECT_PARSING_MESSAGE;
+            return buildProgram(program);
         }
         catch (FollowMeParserException e) {
-            return e.getMessage();
+            throw new IOException(e.getMessage());
         }
     }
 
     //Uses the given program source code to build a program on the current environment (and tracker).
-    private void buildAndSetProgram(String program) throws FollowMeParserException {
+    private ProgramLine<Robot<SurfacePosition, FollowMeLabel>> buildProgram(String program) throws FollowMeParserException {
         this.programBuilder = new FollowMeProgramBuilder<>(environment, tracker);
         this.parser = new FollowMeParser(programBuilder);
         this.parser.parseRobotProgram(program);
-        this.program = programBuilder.getProgramHeadLine();
+        return programBuilder.getProgramHeadLine();
     }
 
     @Override

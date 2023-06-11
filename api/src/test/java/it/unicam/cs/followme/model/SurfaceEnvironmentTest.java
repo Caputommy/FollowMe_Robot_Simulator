@@ -7,9 +7,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 public class SurfaceEnvironmentTest {
 
@@ -73,5 +75,20 @@ public class SurfaceEnvironmentTest {
         Set<FollowMeLabel> expected = new HashSet<>();
         expected.add(new FollowMeLabel("Rectangle_label_2"));
         assertEquals(expected, env.getLabels(new SurfacePosition(-1, -1)));
+    }
+
+    @Test
+    public void shouldGetMapping() {
+        Map<Area<SurfacePosition, FollowMeLabel>, Set<SurfacePosition>> mapping = env.getMapping();
+
+        for (int i=0; i<4; i++) {
+            assertTrue(mapping.containsKey(sampleAreas[i]));
+            assertEquals(1, mapping.get(sampleAreas[i]).size());
+        }
+
+        assertTrue(mapping.get(sampleAreas[0]).contains(new SurfacePosition(-2, 2)));
+        assertTrue(mapping.get(sampleAreas[1]).contains(new SurfacePosition(8, -8)));
+        assertTrue(mapping.get(sampleAreas[2]).contains(new SurfacePosition(4, -2)));
+        assertTrue(mapping.get(sampleAreas[3]).contains(new SurfacePosition(3, -1)));
     }
 }

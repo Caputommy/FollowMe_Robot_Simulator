@@ -1,5 +1,7 @@
-package it.unicam.cs.followme.model.io;
+package it.unicam.cs.followme.io;
 
+import it.unicam.cs.followme.model.environment.Environment;
+import it.unicam.cs.followme.model.program.ProgramLine;
 import it.unicam.cs.followme.model.simulation.SimulationExecutor;
 
 import java.io.File;
@@ -12,9 +14,10 @@ import java.nio.file.Path;
  * their settings from the given data.
  *
  * @param <P> type representing the positions in the simulated system to build.
+ * @param <L> type representing the labels in the simulated system to build.
  * @param <I> type representing the items in the simulated system to build.
  */
-public interface SimulationLoader<P, I> {
+public interface SimulationLoader<P, L, I> {
 
     /**
      * Loads the environment described by the given string into this loader.
@@ -22,9 +25,10 @@ public interface SimulationLoader<P, I> {
      * a {@link SimulationExecutor} based on the given environment until another environment is successfully loaded.
      *
      * @param data the string containing the description of the environment.
-     * @return a string describing the result of the parsing.
+     * @return a deep copy of the environment obtained as a result of the parsing.
+     * @throws IOException if an error occurred during the parsing.
      * */
-    String loadEnvironment(String data);
+    Environment<P, L> loadEnvironment(String data) throws IOException;
 
     /**
      * Loads the environment described by the file referenced by the given path into this loader.
@@ -32,10 +36,10 @@ public interface SimulationLoader<P, I> {
      * a {@link SimulationExecutor} based on the given environment until another environment is successfully loaded.
      *
      * @param path the path to the file containing the description of the environment.
-     * @return a string describing the result of the parsing.
-     * @throws IOException if an I/O error occurs reading from the file.
+     * @return a deep copy of the environment obtained as a result of the parsing.
+     * @throws IOException if an I/O error occurs reading from the file or if an error occurred during the parsing.
      * */
-    default String loadEnvironment(Path path) throws IOException {
+    default Environment<P, L> loadEnvironment(Path path) throws IOException {
         return loadEnvironment(Files.readString(path));
     };
 
@@ -45,10 +49,10 @@ public interface SimulationLoader<P, I> {
      * a {@link SimulationExecutor} based on the given environment until another environment is successfully loaded.
      *
      * @param file the file containing the description of the environment.
-     * @return a string describing the result of the parsing.
-     * @throws IOException if an I/O error occurs from the file.
+     * @return a deep copy of the environment obtained as a result of the parsing.
+     * @throws IOException if an I/O error occurs from the file or if an error occurred during the parsing.
      * */
-    default String loadEnvironment(File file) throws IOException {
+    default Environment<P, L> loadEnvironment(File file) throws IOException {
         return loadEnvironment(file.toPath());
     };
 
@@ -58,9 +62,10 @@ public interface SimulationLoader<P, I> {
      * a {@link SimulationExecutor} based on the given environment until another program is successfully loaded.
      *
      * @param program the string containing the code of the program.
-     * @return a string describing the result of the parsing.
+     * @return a deep copy of the program obtained as a result of the parsing.
+     * @throws IOException if an error occurred during the parsing.
      * */
-    String loadProgram(String program);
+    ProgramLine<I> loadProgram(String program) throws IOException;
 
     /**
      * Loads the program described by the file referenced by the given path into this loader.
@@ -68,10 +73,10 @@ public interface SimulationLoader<P, I> {
      * a {@link SimulationExecutor} based on the given program until another program is successfully loaded.
      *
      * @param path the path to the file containing the code of the program.
-     * @return a string describing the result of the parsing.
-     * @throws IOException if an I/O error occurs reading from the file.
+     * @return a deep copy of the program obtained as a result of the parsing.
+     * @throws IOException if an I/O error occurs reading from the file or if an error occurred during the parsing.
      * */
-    default String loadProgram(Path path) throws IOException {
+    default ProgramLine<I> loadProgram(Path path) throws IOException {
         return loadProgram(Files.readString(path));
     };
 
@@ -81,10 +86,10 @@ public interface SimulationLoader<P, I> {
      * a {@link SimulationExecutor} based on the given program until another program is successfully loaded.
      *
      * @param file the file containing the code of the program.
-     * @return a string describing the result of the parsing.
-     * @throws IOException if an I/O error occurs from the file.
+     * @return a deep copy of the program obtained as a result of the parsing.
+     * @throws IOException if an I/O error occurs from the file or if an error occurred during the parsing.
      * */
-    default String loadProgram(File file) throws IOException {
+    default ProgramLine<I> loadProgram(File file) throws IOException {
         return loadProgram(file.toPath());
     };
 
