@@ -17,7 +17,7 @@ public class SurfacePositionTest {
     public void shouldMapCoordinates () {
         SurfacePosition position = new SurfacePosition(9, 81);
 
-        SurfacePosition expected1 = (new SurfacePosition(9/2, 81/2));
+        SurfacePosition expected1 = (new SurfacePosition(9.0/2, 81.0/2));
         assertEquals(expected1, position.mapCoordinates(x -> x/2));
 
         SurfacePosition expected2 = (new SurfacePosition(3, 9));

@@ -4,6 +4,12 @@
 
 plugins {
     id 'it.unicam.cs.followme.java-application-conventions'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
+}
+
+javafx {
+    version = "17"
+    modules = [ 'javafx.controls' , 'javafx.fxml' ]
 }
 
 dependencies {

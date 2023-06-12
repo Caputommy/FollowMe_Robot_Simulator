@@ -101,8 +101,8 @@ public class MovingItemTrackerTest {
         tracker.moveAll(1);
 
         assertEquals(new SurfacePosition (3, 3), tracker.getCurrentPosition(robots.get(1)).get());
-        assertEquals(new SurfacePosition (5 - (2/Math.sqrt(2)), -3 - (2/Math.sqrt(2))),
+        assertEquals(new SurfacePosition (5 + (2/Math.sqrt(2)), -3 - (2/Math.sqrt(2))),
                 tracker.getCurrentPosition(robots.get(2)).get());
-        assertEquals(new SurfacePosition (0.1, 0.55), tracker.getCurrentPosition(robots.get(1)).get());
+        assertEquals(new SurfacePosition (0.1, 0.55), tracker.getCurrentPosition(robots.get(3)).get());
     }
 }
