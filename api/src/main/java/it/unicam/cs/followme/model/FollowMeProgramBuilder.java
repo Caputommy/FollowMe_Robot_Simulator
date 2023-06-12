@@ -124,10 +124,10 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
 
     @Override
     public void repeatCommandStart(int n) {
-        ProgramVariable<I, Integer> counterVariable = new ProgramVariable<>(n);
+        ProgramVariable<I, Integer> counterVariable = new ProgramVariable<>(0);
         ProgramCondition<I> repeatCondition = new ProgramCondition<>((item) -> {
-            counterVariable.setValue(item, counterVariable.getValue(item)-1);
-            return (counterVariable.getValue(item) >= 0);
+            counterVariable.setValue(item, counterVariable.getValue(item)+1);
+            return (counterVariable.getValue(item)%(n+1) != 0);
         });
         setCurrentLine(repeatCondition);
         conditionStack.push(repeatCondition);

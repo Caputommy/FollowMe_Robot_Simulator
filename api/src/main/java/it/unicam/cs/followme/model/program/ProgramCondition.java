@@ -57,8 +57,9 @@ public final class ProgramCondition<I> implements ProgramLine<I> {
 
     @Override
     public Optional<ProgramLine<I>> execute(I item) {
-        if (condition.test(item) && nextIfTrue.isPresent()) return nextIfTrue.get().execute(item);
-        else if (!condition.test(item) && nextIfFalse.isPresent()) return nextIfFalse.get().execute(item);
+        boolean isPredicateTrue = condition.test(item);
+        if (isPredicateTrue && nextIfTrue.isPresent()) return nextIfTrue.get().execute(item);
+        else if (!isPredicateTrue && nextIfFalse.isPresent()) return nextIfFalse.get().execute(item);
         else return Optional.empty();
     }
 }

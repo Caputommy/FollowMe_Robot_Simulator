@@ -32,6 +32,7 @@ public final class FollowMeSimulationLoader implements SimulationLoader<SurfaceP
     private SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> tracker;
     private String programSourceCode;
     private ProgramLine<Robot<SurfacePosition, FollowMeLabel>> program;
+    private double instructionPaceTime;
 
     public FollowMeSimulationLoader() {
         this.environment = new SurfaceEnvironment<>();
@@ -40,6 +41,7 @@ public final class FollowMeSimulationLoader implements SimulationLoader<SurfaceP
         this.programSourceCode = "";
         this.programBuilder = new FollowMeProgramBuilder<>(environment, tracker);
         this.parser = new FollowMeParser(programBuilder);
+        this.instructionPaceTime = SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME;
     }
 
     @Override
@@ -84,7 +86,12 @@ public final class FollowMeSimulationLoader implements SimulationLoader<SurfaceP
     }
 
     @Override
+    public void setInstructionPaceTime(double s) {
+        this.instructionPaceTime = s;
+    }
+
+    @Override
     public SimulationExecutor<SurfacePosition, Robot<SurfacePosition, FollowMeLabel>> getExecutor() {
-        return new SignalingItemSimulationExecutor<>(environment, tracker, program);
+        return new SignalingItemSimulationExecutor<>(environment, tracker, program, instructionPaceTime);
     }
 }

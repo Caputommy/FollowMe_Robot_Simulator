@@ -30,11 +30,16 @@ public interface SimulationExecutor<P, I> {
     Map<I, P> getCurrentItemMap();
 
     /**
-     * Adds the given mapped items into the current state simulation in the relative mapped positions.
+     * Adds the given mapped items into the current simulation state in the mapped positions.
      *
      * @param mappedItems the items to add in the mapped positions.
      */
     void addItemsToSimulation(Map<I, P> mappedItems);
+
+    /**
+     * Removes all the items currently into the simulation.
+     */
+    void clearItems();
 
     /**
      * Runs the simulation for the given time, starting from the current time of simulation.

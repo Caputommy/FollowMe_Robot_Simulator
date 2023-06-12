@@ -10,8 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Classes implementing this interface are used to build one or more {@link SimulationExecutor}, loading
- * their settings from the given data.
+ * Classes implementing this interface are used to build one or more {@link SimulationExecutor} based on a
+ * environment and a program, loading their settings from the given data.
  *
  * @param <P> type representing the positions in the simulated system to build.
  * @param <L> type representing the labels in the simulated system to build.
@@ -92,6 +92,16 @@ public interface SimulationLoader<P, L, I> {
     default ProgramLine<I> loadProgram(File file) throws IOException {
         return loadProgram(file.toPath());
     };
+
+    /**
+     * Sets the instruction pace time of the simulation in the loader, i.e. the simulation time interval
+     * between the execution of each instruction.
+     * Subsequent calls to <code>getExecutor</code> method will provide a {@link SimulationExecutor} based on the
+     * given program instruction pace time until another one is set.
+     *
+     * @param s the instruction pace time of the executor to be built.
+     */
+    void setInstructionPaceTime(double s);
 
     /**
      * Returns a fresh new {@link SimulationExecutor} based on the latest environment and program loaded.

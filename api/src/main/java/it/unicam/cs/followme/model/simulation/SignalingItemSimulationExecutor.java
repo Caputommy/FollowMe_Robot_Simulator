@@ -29,7 +29,7 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
     private List<ProgramExecution<I>> programExecutions;
     private double currentTime;
 
-    private static final double DEFAULT_INSTRUCTION_PACE_TIME = 1;
+    public static final double DEFAULT_INSTRUCTION_PACE_TIME = 1;
 
     /**
      * Creates a new executor from the given information about the initial state of the simulation,
@@ -93,6 +93,14 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
                     tracker.addItem(e.getKey(), e.getValue());
                     programExecutions.add(new ProgramExecution<>(program, e.getKey()));
                 });
+    }
+
+    /**
+     * Removes all the items currently into the simulation along with their program executions.
+     */
+    public void clearItems() {
+        this.tracker.clear();
+        this.programExecutions.clear();
     }
 
     /**
