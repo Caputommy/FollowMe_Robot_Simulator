@@ -1,9 +1,5 @@
 package it.unicam.cs.followme.model.simulation;
 
-import it.unicam.cs.followme.model.environment.Position;
-import it.unicam.cs.followme.model.items.ConditionSignaler;
-import it.unicam.cs.followme.model.items.MovingItem;
-
 import java.util.Map;
 
 /**
@@ -30,11 +26,23 @@ public interface SimulationExecutor<P, I> {
     Map<I, P> getCurrentItemMap();
 
     /**
+     * Adds the given item into the current simulation state in the given position.
+     *
+     * @param item the items to add.
+     * @param position the position where to place the item.
+     */
+    void addItemToSimulation(I item, P position);
+
+    /**
      * Adds the given mapped items into the current simulation state in the mapped positions.
      *
      * @param mappedItems the items to add in the mapped positions.
      */
-    void addItemsToSimulation(Map<I, P> mappedItems);
+    default void addItemsToSimulation(Map<I, P> mappedItems) {
+        mappedItems.entrySet()
+                .stream()
+                .forEach(e -> addItemToSimulation(e.getKey(), e.getValue()));
+    }
 
     /**
      * Removes all the items currently into the simulation.

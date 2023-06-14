@@ -80,6 +80,19 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
     }
 
     /**
+     * Adds the given item into the current simulation state in the given position.
+     * For that new added item, a new execution of the simulation program is applied, starting from
+     * the first instruction of the program.
+     *
+     * @param item the items to add.
+     * @param position the position where to place the item.
+     */
+    public void addItemToSimulation(I item, P position) {
+        tracker.addItem(item, position);
+        programExecutions.add(new ProgramExecution<>(program, item));
+    }
+
+    /**
      * Adds the given mapped items into the current state simulation in the relative mapped positions.
      * For those new added items, a new execution of the simulation program is applied, starting from
      * the first instruction of the program.
@@ -89,10 +102,7 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
     public void addItemsToSimulation(Map<I, P> mappedItems) {
         mappedItems.entrySet()
                 .stream()
-                .forEach(e -> {
-                    tracker.addItem(e.getKey(), e.getValue());
-                    programExecutions.add(new ProgramExecution<>(program, e.getKey()));
-                });
+                .forEach(e -> addItemToSimulation(e.getKey(), e.getValue()));
     }
 
     /**

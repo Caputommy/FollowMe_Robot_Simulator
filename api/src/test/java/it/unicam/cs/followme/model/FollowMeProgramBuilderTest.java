@@ -62,7 +62,7 @@ public class FollowMeProgramBuilderTest {
                 new FollowMeProgramBuilder<>(environment, tracker);
         builder.parsingStarted();
         builder.moveCommand(new double[]{0, 1, 1.5});
-        builder.waitCommand(10);
+        builder.continueCommand(10);
         builder.stopCommand();
         builder.parsingDone();
         program = builder.getProgramHeadLine();
@@ -81,7 +81,6 @@ public class FollowMeProgramBuilderTest {
     }
 
     private void buildProgram5() {
-        //TODO add area environment, until - moverandom
         tracker.addItem(robot, new SurfacePosition(-4,0));
         environment.addArea(new SurfaceCircleArea<>(new FollowMeLabel("Circle_label"), 0.5), new SurfacePosition(2,0));
         FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
@@ -89,7 +88,7 @@ public class FollowMeProgramBuilderTest {
         builder.parsingStarted();
         builder.moveCommand(new double[]{1, 0, 1});
         builder.untilCommandStart("Circle_label");
-            builder.waitCommand(1);
+            builder.continueCommand(1);
         builder.doneCommand();
         builder.stopCommand();
         builder.parsingDone();

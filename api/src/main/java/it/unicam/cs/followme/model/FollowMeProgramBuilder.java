@@ -114,11 +114,11 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
     }
 
     @Override
-    public void waitCommand(int s) {
+    public void continueCommand(int s) {
         if (s > 0) {
             ProgramInstruction<I> waitInstruction = new ProgramInstruction<>((item) -> {});
             setCurrentLine(waitInstruction);
-            waitCommand(s-1);
+            continueCommand(s-1);
         }
     }
 
