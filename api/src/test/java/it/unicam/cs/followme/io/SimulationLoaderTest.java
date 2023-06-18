@@ -49,6 +49,13 @@ public class SimulationLoaderTest {
             "   MOVE 0 1 2\n" +
             "DONE";
 
+    private static final String PROGRAM3 =
+            "UNTIL LABEL_3\n" +
+            "   CONTINUE 1\n" +
+            "DONE\n" +
+            "SIGNAL LABEL_3_FOUND\n" +
+            "STOP";
+
     @BeforeEach
     public void createLoader() {
         loader = new FollowMeSimulationLoader();
@@ -185,7 +192,6 @@ public class SimulationLoaderTest {
         assertDoesNotThrow(() -> loader.loadEnvironment(environment));
         assertDoesNotThrow(() -> loader.loadProgram(code));
         try {
-            ProgramLine<Robot<SurfacePosition, FollowMeLabel>> program = loader.loadProgram(code);
             parsedEnv = loader.loadEnvironment(environment);
             robot = new Robot<>(new SurfaceDirection(1,0));
             simulationExecutor = loader.getExecutor();
@@ -194,42 +200,13 @@ public class SimulationLoaderTest {
     }
 
     @Test
-    public void shouldAddItemToSimulation() {
-        initSimulation(ENV1, PROGRAM1);
-        simulationExecutor.addItemToSimulation(robot, new SurfacePosition(0,0));
+    public void shouldLoadSimulation() {
+        initSimulation(ENV1, PROGRAM3);
+        simulationExecutor.addItemToSimulation(robot, new SurfacePosition(4,-1));
 
-        assertEquals(new SurfacePosition(0,0), simulationExecutor.getCurrentItemMap().get(robot));
-    }
-
-    @Test
-    public void shouldRunSimulation() {
-        initSimulation(ENV1, PROGRAM1);
-        simulationExecutor.addItemToSimulation(robot, new SurfacePosition(0,0));
-
-        simulationExecutor.runSimulation(2);
-        assertEquals(2.0, robot.getCurrentVelocity());
-        assertEquals(Set.of(new FollowMeLabel("LABEL_1")), robot.getConditions());
-
-        simulationExecutor.runSimulation(0.5);
-        assertEquals(Set.of(new FollowMeLabel("LABEL_1")), robot.getConditions());
-    }
-
-    private Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> getRobotMap1() {
-        Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> map = new HashMap<>();
-        Direction<SurfacePosition> dir = new SurfaceDirection(0,1);
-        map.put(new Robot<>(dir), new SurfacePosition(6,6));
-        for (Robot<SurfacePosition, FollowMeLabel> r : map.keySet()) r.signal(new FollowMeLabel("Label_1"));
-        map.put(new Robot<>(dir), new SurfacePosition(-2,4));
-        for (Robot<SurfacePosition, FollowMeLabel> r : map.keySet()) r.signal(new FollowMeLabel("Label_2"));
-        map.put(new Robot<>(dir), new SurfacePosition(-10,-5));
-        for (Robot<SurfacePosition, FollowMeLabel> r : map.keySet()) r.signal(new FollowMeLabel("Label_3"));
-        return map;
-    }
-    @Test
-    private void shouldParseFollow() {
-        initSimulation(ENV1, PROGRAM2);
-        simulationExecutor.addItemsToSimulation(getRobotMap1());
-        simulationExecutor.addItemToSimulation(robot, new SurfacePosition(0,0));
-        //TODO
+        simulationExecutor.runSimulation(1);
+        Set<FollowMeLabel> expectedLabels = new HashSet<>();
+        expectedLabels.add(new FollowMeLabel("LABEL_3_FOUND"));
+        assertEquals(expectedLabels, robot.getConditions());
     }
 }

@@ -2,7 +2,7 @@ package it.unicam.cs.followme.model.items;
 
 /**
  * A class extending this abstract class is a particular {@link MovingItem} which follow a uniform
- * motion that can be described with a {@link Direction} and velocity.
+ * motion that can be described with {@link Direction} and velocity.
  *
  * @param <P> the type representing the positions the item can move among.
  */
