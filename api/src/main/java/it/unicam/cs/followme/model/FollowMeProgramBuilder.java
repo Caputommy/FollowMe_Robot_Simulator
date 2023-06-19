@@ -17,6 +17,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
+/**
+ * Instances of this class are used to build an executable FollowMe program according to the FollowMe commands
+ * encountered by a parser.
+ *
+ * @param <I> type representing the programmed item.
+ */
+
 public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePosition> & ConditionSignaler<FollowMeLabel>>
         implements FollowMeParserHandler {
     private final Environment<SurfacePosition, FollowMeLabel> environment;
@@ -26,6 +33,14 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
     private ProgramLine<I> currentLine;
     private Stack<ProgramCondition<I>> conditionStack;
 
+    /**
+     * Constructs a program builder that binds the program it produces to the given {@link Environment} and
+     * {@link SignalingMovingItemTracker}. When instructions or condition that act upon a certain environment or
+     * itemTracker are parsed, the given parameters will be used.
+     *
+     * @param environment the environment to bind the program to.
+     * @param itemTracker the itemTracker to bind the program to.
+     */
     public FollowMeProgramBuilder(Environment<SurfacePosition, FollowMeLabel> environment,
                                   SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, I> itemTracker) {
         this.environment = environment;
@@ -33,11 +48,24 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
         this.parsingDone = false;
     }
 
+    /**
+     * Returns the current parsing state of this builder. Returns true if the last parsing has successfully
+     * concluded and the associated complete program can be obtained from <code>getProgramHeadLine()</code>.
+     *
+     * @return true if the last parsing has concluded.
+     */
     public boolean isParsingDone() {
         return parsingDone;
     }
 
-    //TODO
+    /**
+     * Returns the first line of the last parsed program built by this builder.
+     * If no parsing has started, a null value is returned.
+     * If the current parsing has started but has not ended (i.e. <code>isParsingDone()</code> is false),
+     * an incomplete program may be returned.
+     *
+     * @return the last built program by this builder.
+     */
     public ProgramLine<I> getProgramHeadLine() {
         return headLine;
     }
@@ -47,6 +75,7 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
         this.headLine = new ProgramCondition<I>((item) -> false);
         this.currentLine = this.headLine;
         this.conditionStack = new Stack<>();
+        this.parsingDone = false;
     }
 
     @Override
