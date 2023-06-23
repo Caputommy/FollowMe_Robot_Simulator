@@ -36,13 +36,13 @@ public class SurfaceCircleArea<L> extends SurfaceArea<L> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRadius());
+        return Objects.hash(getLabel(), getRadius());
     }
 
     @Override
     public String toString() {
         return "SurfaceCircleArea{" +
-                "label=" + label +
+                "label=" + getLabel() +
                 ", radius=" + radius +
                 '}';
     }

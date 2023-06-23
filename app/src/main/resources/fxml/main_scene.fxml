@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1280.0" style="-fx-border-style: 1px solid #E0FFFF;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1280.0" style="-fx-border-style: 1px solid #E0FFFF;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.cs.followme.app.FollowMeAppController">
    <bottom>
       <Pane prefHeight="110.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
          <children>
@@ -77,7 +77,7 @@
                   </TextFlow>
                   <HBox maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="230.0" GridPane.rowIndex="1">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                        <Button fx:id="loadEnvironmentButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -105,7 +105,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                        <Button fx:id="loadProgramButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -146,7 +146,7 @@
                                     <Image url="@../icons/InstructionPaceTimeIcon.png" />
                                  </image>
                               </ImageView>
-                              <Spinner maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="70.0">
+                              <Spinner fx:id="paceTimeSpinner" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="70.0">
                                  <tooltip>
                                     <Tooltip text="Set Instruction Pace TIme" />
                                  </tooltip>
@@ -163,7 +163,7 @@
                   </HBox>
                   <HBox prefHeight="80.0" prefWidth="156.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                        <Button fx:id="addRobotsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -191,7 +191,7 @@
                               <Insets bottom="5.0" left="5.0" top="5.0" />
                            </HBox.margin>
                         </Button>
-                        <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                        <Button fx:id="clearRobotsButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -228,8 +228,8 @@
                      <children>
                         <HBox prefHeight="80.0" prefWidth="150.0">
                            <children>
-                              <Spinner minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="70.0" />
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                              <Spinner fx:id="playSecondsSpinner" editable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="70.0" />
+                              <Button fx:id="playSecondsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
@@ -264,8 +264,8 @@
                         </HBox>
                         <HBox prefHeight="80.0" prefWidth="150.0">
                            <children>
-                              <Spinner minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="70.0" />
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                              <Spinner fx:id="playStepsSpinner" editable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="70.0" />
+                              <Button fx:id="playStepsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
@@ -298,7 +298,7 @@
                               <Insets bottom="5.0" left="5.0" top="5.0" />
                            </padding>
                         </HBox>
-                        <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                        <Button fx:id="playOneStepButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -341,7 +341,7 @@
                      <children>
                         <HBox prefHeight="79.0" prefWidth="185.0">
                            <children>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                              <Button fx:id="moveViewLeftButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
@@ -371,7 +371,7 @@
                               </Button>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="70.0">
+                                    <Button fx:id="moveViewUpButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="70.0">
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
@@ -399,7 +399,7 @@
                                           <Insets top="5.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="70.0">
+                                    <Button fx:id="moveViewDownButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="70.0">
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
@@ -429,7 +429,7 @@
                                     </Button>
                                  </children>
                               </VBox>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                              <Button fx:id="moveViewRightButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
@@ -472,7 +472,7 @@
                                     <Insets top="5.0" />
                                  </HBox.margin>
                               </ImageView>
-                              <Slider prefHeight="70.0" prefWidth="130.0">
+                              <Slider fx:id="zoomViewSlider" prefHeight="70.0" prefWidth="130.0">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" top="5.0" />
                                  </padding>
@@ -519,7 +519,7 @@
                         <Font name="Roboto" size="20.0" />
                      </font>
                   </Label>
-                  <TextArea editable="false" prefHeight="450.0" prefWidth="310.0">
+                  <TextArea fx:id="programTextArea" editable="false" prefHeight="450.0" prefWidth="310.0">
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" />
                      </VBox.margin>
@@ -550,12 +550,12 @@
                               <Image url="@../icons/ChronometerIcon.png" />
                            </image>
                         </ImageView>
-                        <Label alignment="CENTER" prefHeight="24.0" prefWidth="65.0" style="-fx-background-color: #FFF; -fx-border-color: #AAA;" text="0:00">
+                        <Label fx:id="stopwatchLabel" alignment="CENTER" prefHeight="24.0" prefWidth="65.0" style="-fx-background-color: #FFF; -fx-border-color: #AAA;" text="0:00">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="simulationStateIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../icons/StopIcon.png" />
                            </image>

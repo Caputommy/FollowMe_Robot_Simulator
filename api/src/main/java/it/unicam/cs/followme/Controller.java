@@ -30,6 +30,13 @@ public class Controller<P extends Position<P>, L, I extends MovingItem<P> & Cond
     public static Controller<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> getFollowMeController() {
         return new Controller<>(new FollowMeSimulationLoader());
     }
+
+    /**
+     * Creates a new controller based on the given {@link SimulationLoader}, used to build an executable simulation
+     * from source files.
+     *
+     * @param builder the simulation loader.
+     */
     public Controller(SimulationLoader<P, L, I> builder) {
         this.builder = builder;
         this.executor = builder.getExecutor();

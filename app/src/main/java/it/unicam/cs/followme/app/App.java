@@ -16,7 +16,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/main_scene.fxml")));
         primaryStage.setTitle("FollowMe App");
-        primaryStage.setScene(new Scene(root, 1280, 600));
+        primaryStage.setScene(new Scene(root, FollowMeAppController.WIDTH, FollowMeAppController.HEIGHT));
         primaryStage.setResizable(false);
         primaryStage.show();
     }

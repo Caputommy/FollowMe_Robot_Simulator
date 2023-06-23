@@ -50,13 +50,13 @@ public class SurfaceRectangleArea<L> extends SurfaceArea<L> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getWidth(), getHeight());
+        return Objects.hash(getLabel(), getWidth(), getHeight());
     }
 
     @Override
     public String toString() {
         return "SurfaceRectangleArea{" +
-                "label=" + label +
+                "label=" + getLabel() +
                 ", width=" + width +
                 ", height=" + height +
                 '}';

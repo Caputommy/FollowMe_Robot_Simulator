@@ -20,24 +20,24 @@ public abstract class UniformMotionMovingItem<P> implements MovingItem<P> {
         this.currentVelocity = velocity;
     }
 
-    public Direction<P> getCurrentDirection() {
+    public final Direction<P> getCurrentDirection() {
         return this.currentDirection;
     }
 
-    public void setCurrentDirection(Direction<P> currentDirection) {
+    public final void setCurrentDirection(Direction<P> currentDirection) {
         this.currentDirection = currentDirection;
     }
 
-    public double getCurrentVelocity() {
+    public final double getCurrentVelocity() {
         return this.currentVelocity;
     }
 
-    public void setCurrentVelocity(double currentVelocity) {
+    public final void setCurrentVelocity(double currentVelocity) {
         this.currentVelocity = currentVelocity;
     }
 
     @Override
-    public P moveFrom(P startingPosition, double time) {
+    public final P moveFrom(P startingPosition, double time) {
         return this.currentDirection.shift(startingPosition, this.currentVelocity * time);
     }
 }
