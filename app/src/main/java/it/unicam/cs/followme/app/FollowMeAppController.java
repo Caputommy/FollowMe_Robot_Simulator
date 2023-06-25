@@ -2,15 +2,25 @@ package it.unicam.cs.followme.app;
 
 import it.unicam.cs.followme.Controller;
 import it.unicam.cs.followme.model.FollowMeLabel;
+import it.unicam.cs.followme.model.environment.SurfaceCircleArea;
 import it.unicam.cs.followme.model.environment.SurfacePosition;
+import it.unicam.cs.followme.model.environment.SurfaceRectangleArea;
 import it.unicam.cs.followme.model.items.Robot;
 import it.unicam.cs.followme.model.simulation.SignalingItemSimulationExecutor;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -28,9 +38,18 @@ public class FollowMeAppController {
 
     @FXML
     private Label stopwatchLabel;
-
     @FXML
     private ImageView simulationStateIcon;
+
+    @FXML
+    private NumberAxis xAxis;
+    @FXML
+    private NumberAxis yAxis;
+
+    @FXML
+    private AnchorPane environmentPane;
+    @FXML
+    private AnchorPane robotsPane;
 
     @FXML
     private Button loadEnvironmentButton;
@@ -79,6 +98,12 @@ public class FollowMeAppController {
 
     private final Image stopImage = new Image("/icons/StopIcon.png");
     private final Image playImage = new Image("/icons/PlayIcon.png");
+
+    private final Color areaColor = new Color(0.0, 1.0, 1.0, 0.25);
+    private final String labelStyle =
+            "-fx-font-family: \"Roboto\";" +
+            "-fx-font-style: italic;" +
+            "-fx-font-size: 12px;";
 
 
     public void initialize() {
@@ -158,5 +183,90 @@ public class FollowMeAppController {
                 alert.setHeaderText(e.getMessage());
             }
         }
+    }
+
+    @FXML
+    private void onLoadProgramCommand() {
+        SurfaceCircleArea<FollowMeLabel> circle = new SurfaceCircleArea<>(new FollowMeLabel("LABEL_1"), 2);
+        showCircleArea(circle, new SurfacePosition(5, 5));
+        showCircleArea(circle, new SurfacePosition(9, 9));
+        showCircleArea(circle, new SurfacePosition(-21, -10));
+
+        SurfaceRectangleArea<FollowMeLabel> rectangle = new SurfaceRectangleArea<>(new FollowMeLabel("LABEL_1"), 2, 5);
+        showRectangleArea(rectangle, new SurfacePosition(19, 5));
+        showRectangleArea(rectangle, new SurfacePosition(0, 0));
+        clipPane(environmentPane);
+    }
+
+    /**
+     * Shows a circle area on the environment pane according to the position of its center.
+     *
+     * @param circleArea the circle area to be shown.
+     * @param position the absolute position of its centre in the environment.
+     */
+    private void showCircleArea(SurfaceCircleArea<FollowMeLabel> circleArea, SurfacePosition position){
+        Circle circle = new Circle(scale(circleArea.getRadius()), areaColor);
+        StackPane circlePane = new StackPane(circle, getTextFromLabel(circleArea.getLabel()));
+        showChildOnPane(environmentPane, circlePane, position.mapCoordinates(x -> x - circleArea.getRadius()));
+    }
+
+    /**
+     * Shows a rectangle area on the environment pane according to the position of its center.
+     *
+     * @param rectangleArea the rectangle area to be shown.
+     * @param position the absolute position of its centre in the environment.
+     */
+    private void showRectangleArea(SurfaceRectangleArea<FollowMeLabel> rectangleArea, SurfacePosition position){
+        Rectangle rectangle =
+                new Rectangle(scale(rectangleArea.getWidth()), scale(rectangleArea.getHeight()), areaColor);
+        StackPane rectanglePane = new StackPane(rectangle, getTextFromLabel(rectangleArea.getLabel()));
+        showChildOnPane(environmentPane, rectanglePane, new SurfacePosition(
+                position.getX()-rectangleArea.getWidth()/2,
+                position.getY()-rectangleArea.getHeight()/2
+        ));
+    }
+
+    private Text getTextFromLabel(FollowMeLabel label) {
+        Text labelText = new Text(label.label());
+        labelText.setStyle(labelStyle);
+        return labelText;
+    }
+
+    /**
+     * Shows the given child on the given anchor pane in the given absolute position. The effective position
+     * is calculated upon the current state of the axis and represents the distance between the left-bottom
+     * corner of the child and the left-bottom corner of the pane.
+     *
+     * @param pane the anchor pane where to show the child.
+     * @param child the child node to be shown.
+     * @param absPosition the axis-related absolute position.
+     */
+    private void showChildOnPane(AnchorPane pane, Node child, SurfacePosition absPosition) {
+        AnchorPane.setLeftAnchor(child, scale(absPosition.getX()-xAxis.getLowerBound()));
+        AnchorPane.setBottomAnchor(child, scale(absPosition.getY()-yAxis.getLowerBound()));
+        pane.getChildren().add(child);
+    }
+
+    /**
+     * This method is used to clip all child nodes of an AnchorPane that go beyond its boundaries.
+     * The child nodes must already be added to the pane before the invocation in order to be clipped.
+     *
+     * @param pane the anchor pane to be clipped.
+     */
+    private void clipPane(AnchorPane pane) {
+        Rectangle clipRect = new Rectangle();
+        clipRect.widthProperty().bind(pane.widthProperty());
+        clipRect.heightProperty().bind(pane.heightProperty());
+        pane.setClip(clipRect);
+    }
+
+    /**
+     * Returns the visual units measure of a value according to the current axis scaling.
+     *
+     * @param val the value to be scaled.
+     * @return the equivalent visual units of the value.
+     */
+    private double scale(double val) {
+        return val*xAxis.getScale();
     }
 }
