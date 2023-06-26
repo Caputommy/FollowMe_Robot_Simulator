@@ -6,11 +6,13 @@ import it.unicam.cs.followme.model.environment.*;
 import it.unicam.cs.followme.model.items.Robot;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.simulation.SignalingItemSimulationExecutor;
-import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -22,10 +24,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * JavaFX Controller of FollowMeApp.
@@ -158,6 +163,46 @@ public class FollowMeAppController {
     }
 
     /**
+     * Method used to handle the load environment command.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onLoadEnvironmentCommand(Event event) {
+        File selectedFile = getTxtFileChooser("Load Environment File")
+                .showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                controller.openEnvironment(selectedFile);
+                showNewSimulationSetting();
+                drawEnvironment();
+            } catch (IOException e) {
+                showErrorAlert(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Method used to handle the load program command.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onLoadProgramCommand(Event event) {
+        File selectedFile = getTxtFileChooser("Load Program File")
+                .showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                controller.openProgram(selectedFile);
+                showNewSimulationSetting();
+                refreshProgramCode();
+            } catch (IOException e) {
+                showErrorAlert(e.getMessage());
+            }
+        }
+    }
+
+    /**
      * Resets the shown program source code.
      */
     private void refreshProgramCode() {
@@ -165,36 +210,31 @@ public class FollowMeAppController {
         programTextArea.appendText(controller.getCurrentSourceCode());
     }
 
-
     /**
-     * Method used to handle the load environment command.
+     * Creates a {@link FileChooser} with the given title to choose a txt file.
      *
-     * @param event the triggering event.
+     * @param title the title of the file chooser.
+     * @return the txt file chooser.
      */
-    @FXML
-    private void onLoadEnvironmentCommand(Event event) {
+    private FileChooser getTxtFileChooser(String title) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Load Environment File");
+        fileChooser.setTitle(title);
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Txt Files", "*.txt"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
-        File selectedFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
-        if (selectedFile != null) {
-            try {
-                controller.openEnvironment(selectedFile);
-                showNewSimulationSetting();
-                drawEnvironment();
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Loading error");
-                alert.setHeaderText(e.getMessage());
-            }
-        }
+        return fileChooser;
     }
 
-    @FXML
-    private void onLoadProgramCommand() {
-        //TODO
+    /**
+     * Shows an error alert window with the given error message.
+     *
+     * @param message the error message to show.
+     */
+    private void showErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Loading error");
+        alert.setHeaderText(message);
+        alert.showAndWait();
     }
 
     /**
@@ -410,5 +450,28 @@ public class FollowMeAppController {
      */
     private double getCurrentAxesSize() {
         return yAxis.getUpperBound() - yAxis.getLowerBound();
+    }
+
+    @FXML
+    private void onAddRobotsCommand(Event event) {
+        try {
+            Stage addRobotStage = getAddRobotStage();
+            addRobotStage.showAndWait();
+            //TODO drawRobots
+        } catch (IOException e) {
+            showErrorAlert(e.getMessage());
+        }
+    }
+
+    private Stage getAddRobotStage() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_robots_scene.fxml"));
+        loader.setController(new AddRobotsController(controller, xAxis, yAxis));
+        Scene addRobotScene = new Scene(loader.load(), AddRobotsController.WIDTH, AddRobotsController.HEIGHT);
+        Stage addRobotStage = new Stage();
+        addRobotStage.setTitle("Add Robots");
+        addRobotStage.setScene(addRobotScene);
+        addRobotStage.setResizable(false);
+        addRobotStage.initModality(Modality.APPLICATION_MODAL);
+        return addRobotStage;
     }
 }

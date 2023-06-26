@@ -23,6 +23,11 @@ public class ProgramTest {
 
     @BeforeEach
     public void setLines() {
+        setArrayListProgramLines();
+        setRobotProgramLines();
+    }
+
+    private void setArrayListProgramLines() {
         listConditions = new ArrayList<>();
         listInstructions = new ArrayList<>();
         listConditions.add(new ProgramCondition<>(l -> (l.size() <= 3)));
@@ -30,7 +35,9 @@ public class ProgramTest {
         listInstructions.add(new ProgramInstruction<>(l -> l.add("string1")));
         listInstructions.add(new ProgramInstruction<>(l -> l.add("string2")));
         listInstructions.add(new ProgramInstruction<>(l -> l.add("string3")));
+    }
 
+    private void setRobotProgramLines() {
         robotConditions = new ArrayList<>();
         robotInstructions = new ArrayList<>();
         ProgramVariable<Robot<SurfacePosition, FollowMeLabel>, Integer> var = new ProgramVariable<>(100);
