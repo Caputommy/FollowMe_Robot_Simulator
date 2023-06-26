@@ -475,7 +475,7 @@
                                     <Insets top="5.0" />
                                  </HBox.margin>
                               </ImageView>
-                              <Slider fx:id="zoomViewSlider" prefHeight="70.0" prefWidth="130.0">
+                              <Slider fx:id="zoomViewSlider" blockIncrement="4.0" majorTickUnit="4.0" max="40.0" min="4.0" minorTickCount="0" nodeOrientation="RIGHT_TO_LEFT" onMouseReleased="#onZoomViewCommand" prefHeight="70.0" prefWidth="130.0" showTickMarks="true" snapToTicks="true" value="20.0">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" top="5.0" />
                                  </padding>
@@ -577,10 +577,10 @@
                <children>
                   <BubbleChart maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="460.0" prefWidth="892.0">
                     <xAxis>
-                      <NumberAxis autoRanging="false" forceZeroInRange="false" lowerBound="-20.0" side="BOTTOM" tickUnit="1.0" upperBound="20.0" fx:id="xAxis" />
+                      <NumberAxis animated="false" autoRanging="false" forceZeroInRange="false" lowerBound="-20.0" side="BOTTOM" tickUnit="1.0" upperBound="20.0" fx:id="xAxis" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis fx:id="yAxis" autoRanging="false" forceZeroInRange="false" lowerBound="-10.0" maxWidth="-Infinity" prefHeight="406.0" prefWidth="50.0" side="LEFT" tickUnit="1.0" upperBound="10.0" />
+                      <NumberAxis fx:id="yAxis" animated="false" autoRanging="false" forceZeroInRange="false" lowerBound="-10.0" maxWidth="-Infinity" prefHeight="406.0" prefWidth="50.0" side="LEFT" tickUnit="1.0" upperBound="10.0" />
                     </yAxis>
                      <StackPane.margin>
                         <Insets left="-50.0" />

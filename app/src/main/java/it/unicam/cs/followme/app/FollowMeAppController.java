@@ -6,6 +6,7 @@ import it.unicam.cs.followme.model.environment.*;
 import it.unicam.cs.followme.model.items.Robot;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.simulation.SignalingItemSimulationExecutor;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -24,7 +25,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 /**
  * JavaFX Controller of FollowMeApp.
@@ -111,12 +112,15 @@ public class FollowMeAppController {
             "-fx-font-style: italic;" +
             "-fx-font-size: 12px;";
 
+    /**
+     * Factor that represent the proportion of the view that is hidden/showed in response to
+     * any view movement command.
+     */
     private final double moveViewFactor = 0.1;
 
 
     public void initialize() {
         initSpinners();
-        initZoomSlider();
     }
 
     private void initSpinners() {
@@ -140,10 +144,6 @@ public class FollowMeAppController {
     private void initPlayStepsSpinner() {
         playStepsSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(
                 1, Integer.MAX_VALUE, 1, 1));
-    }
-
-    private void initZoomSlider() {
-        zoomViewSlider = new Slider(0, 10, 5);
     }
 
     /**
@@ -268,7 +268,7 @@ public class FollowMeAppController {
 
     /**
      * This method is used to show the given child on the given anchor pane in the given absolute position.
-     * The effective position is calculated upon the current state of the axis and represents the distance between
+     * The effective position is calculated upon the current state of the axes and represents the distance between
      * the left-bottom corner of the child and the left-bottom corner of the pane.
      *
      * @param pane the anchor pane where to show the child.
@@ -295,13 +295,13 @@ public class FollowMeAppController {
     }
 
     /**
-     * Returns the visual units measure of a value according to the current axis scaling.
+     * Returns the visual units measure of a value according to the current axes scaling.
      *
      * @param val the value to be scaled.
      * @return the equivalent visual units of the value.
      */
     private double scale(double val) {
-        return val*xAxis.getScale();
+        return val*(yAxis.getHeight()/getCurrentAxesSize());
     }
 
     /**
@@ -345,6 +345,24 @@ public class FollowMeAppController {
     }
 
     /**
+     * This is the method invoked when the zoom slider is manipulated.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onZoomViewCommand(Event event) {
+        double sizeDiff = zoomViewSlider.getValue()-getCurrentAxesSize();
+        if (sizeDiff != 0) {
+            xAxis.setLowerBound(xAxis.getLowerBound()-sizeDiff);
+            xAxis.setUpperBound(xAxis.getUpperBound()+sizeDiff);
+            yAxis.setLowerBound(yAxis.getLowerBound()-(sizeDiff/2));
+            yAxis.setUpperBound(yAxis.getUpperBound()+(sizeDiff/2));
+            drawEnvironment();
+            //TODO drawRobots
+        }
+    }
+
+    /**
      * This is the method invoked to handle key events.
      *
      * @param event the triggering event.
@@ -365,22 +383,32 @@ public class FollowMeAppController {
      * @param direction the direction of the movement.
      */
     private void moveView(SurfaceDirection direction) {
-        moveAxis(direction);
+        moveAxes(direction);
         drawEnvironment();
         //TODO drawRobots
     }
 
     /**
-     * This method is used to shift the axis in the given direction according to the <code> moveViewFactor</code>
+     * This method is used to shift the axes in the given direction according to the <code> moveViewFactor</code>
      * specified for this controller.
      *
      * @param direction the direction of the movement.
      */
-    private void moveAxis(SurfaceDirection direction) {
-        double axisSize = yAxis.getUpperBound() - yAxis.getLowerBound();
-        xAxis.setLowerBound(xAxis.getLowerBound() + axisSize*moveViewFactor*direction.getNormalizedPosition().getX());
-        xAxis.setUpperBound(xAxis.getUpperBound() + axisSize*moveViewFactor*direction.getNormalizedPosition().getX());
-        yAxis.setLowerBound(yAxis.getLowerBound() + axisSize*moveViewFactor*direction.getNormalizedPosition().getY());
-        yAxis.setUpperBound(yAxis.getUpperBound() + axisSize*moveViewFactor*direction.getNormalizedPosition().getY());
+    private void moveAxes(SurfaceDirection direction) {
+        double axesSize = getCurrentAxesSize();
+        xAxis.setLowerBound(xAxis.getLowerBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getX());
+        xAxis.setUpperBound(xAxis.getUpperBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getX());
+        yAxis.setLowerBound(yAxis.getLowerBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getY());
+        yAxis.setUpperBound(yAxis.getUpperBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getY());
+    }
+
+    /**
+     * Returns the current height of the y-axis, that represents the current size of both axes.
+     * (x-axis is always double-sized compared to y-axis)
+     *
+     * @return the current size of the y-axis
+     */
+    private double getCurrentAxesSize() {
+        return yAxis.getUpperBound() - yAxis.getLowerBound();
     }
 }
