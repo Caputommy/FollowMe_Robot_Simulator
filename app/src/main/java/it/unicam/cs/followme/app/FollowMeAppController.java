@@ -143,7 +143,7 @@ public class FollowMeAppController {
     private void initPlaySecondsSpinner() {
         playSecondsSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(
                 0.01, Double.MAX_VALUE,
-                SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME, 0.01));
+                SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME, 0.05));
     }
 
     private void initPlayStepsSpinner() {
@@ -473,5 +473,10 @@ public class FollowMeAppController {
         addRobotStage.setResizable(false);
         addRobotStage.initModality(Modality.APPLICATION_MODAL);
         return addRobotStage;
+    }
+
+    @FXML
+    private void onPlaySecondsCommand(Event event) {
+        //TODO
     }
 }
