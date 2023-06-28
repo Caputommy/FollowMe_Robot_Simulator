@@ -4,34 +4,41 @@ import it.unicam.cs.followme.Controller;
 import it.unicam.cs.followme.model.FollowMeLabel;
 import it.unicam.cs.followme.model.environment.SurfacePosition;
 import it.unicam.cs.followme.model.items.Robot;
+import it.unicam.cs.followme.model.items.SurfaceDirection;
+import it.unicam.cs.followme.util.DoubleRange;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
-import javafx.util.converter.DoubleStringConverter;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * JavaFX Controller of the Add Robots stage of the FollowMeApp.
+ */
 public class AddRobotsController {
 
     public static final int WIDTH = 600;
     public static final int HEIGHT = 400;
 
-    //Model controller from app controller.
+    //Model controller obtained from FollowMeAppController.
     private final Controller<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> controller;
 
-    //Axes from app controller used to get default values.
+    //Axes from FollowMeAppController used to get default values.
     private final NumberAxis xAxis;
     private final NumberAxis yAxis;
 
     //Fields of lists used to store the generated spinners.
-    private final List<List<Spinner<Double>>> positionList;
+    private final List<List<Spinner<Double>>> positionsTableList;
     private final List<Spinner<Integer>> robotNumberList;
-    private final List<List<Spinner<Double>>> rangesList;
+    private final List<List<Spinner<Double>>> rangesTableList;
 
     @FXML
     private GridPane positionsTable;
@@ -56,9 +63,9 @@ public class AddRobotsController {
         this.controller = controller;
         this.xAxis = xAxis;
         this.yAxis = yAxis;
-        this.positionList = new ArrayList<>();
+        this.positionsTableList = new ArrayList<>();
         this.robotNumberList = new ArrayList<>();
-        this.rangesList = new ArrayList<>();
+        this.rangesTableList = new ArrayList<>();
     }
 
     private void initialize() {}
@@ -70,13 +77,17 @@ public class AddRobotsController {
      */
     @FXML
     private void onAddPositionRowCommand(Event event) {
-        positionList.add(new ArrayList<>());
-        positionList.get(positionList.size()-1).add(getCoordinateSpinner(getAxisMidValue(xAxis)));
-        positionList.get(positionList.size()-1).add(getCoordinateSpinner(getAxisMidValue(yAxis)));
-        positionsTable.addRow(positionsTable.getRowCount(),
-                positionList.get(positionList.size()-1).get(0),
-                positionList.get(positionList.size()-1).get(1));
+        positionsTableList.add(new ArrayList<>());
+        int rowIndex = positionsTableList.size();
+        positionsTableList.get(rowIndex-1).add(getCoordinateSpinner(getAxisMidValue(xAxis)));
+        positionsTableList.get(rowIndex-1).add(getCoordinateSpinner(getAxisMidValue(yAxis)));
+        positionsTableList.get(rowIndex-1).add(getCoordinateSpinner(1));
+        positionsTableList.get(rowIndex-1).add(getCoordinateSpinner(0));
+        positionsTableList.get(rowIndex-1).add(getVelocitySpinner());
 
+        for (int i = 0; i< positionsTableList.get(rowIndex-1).size(); i++) {
+            positionsTable.add(positionsTableList.get(rowIndex-1).get(i), i, rowIndex);
+        }
     }
 
     /**
@@ -86,20 +97,29 @@ public class AddRobotsController {
      */
     @FXML
     private void OnAddRangeRowCommand(Event event) {
-        rangesTable.addRow(rangesTable.getRowCount(),
-                getNaturalNumberSpinner(),
-                getCoordinateSpinner(xAxis.getLowerBound()),
-                getCoordinateSpinner(xAxis.getUpperBound()),
-                getCoordinateSpinner(yAxis.getLowerBound()),
-                getCoordinateSpinner(yAxis.getUpperBound()));
+        rangesTableList.add(new ArrayList<>());
+        int rowIndex = rangesTableList.size();
+        robotNumberList.add(getNaturalNumberSpinner());
+        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(xAxis.getLowerBound()));
+        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(xAxis.getUpperBound()));
+        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(yAxis.getLowerBound()));
+        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(yAxis.getUpperBound()));
+        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(1));
+        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(0));
+        rangesTableList.get(rowIndex-1).add(getVelocitySpinner());
+
+        rangesTable.add(robotNumberList.get(rowIndex-1), 0, rowIndex);
+        for (int i=0; i<rangesTableList.get(rowIndex-1).size(); i++) {
+            rangesTable.add(rangesTableList.get(rowIndex-1).get(i), i+1, rowIndex);
+        }
     }
 
     /**
      * Returns the value that sits in the middle of the given axis, calculated as the arithmetic
      * mean between the lower bound and the upper bound of the axis.
      *
-     * @param axis the axis to calculate the mid value of.
-     * @return the mid value of the axis.
+     * @param axis the axis to calculate the mid-value of.
+     * @return the mid-value of the axis.
      */
     private double getAxisMidValue(NumberAxis axis) {
         return (axis.getLowerBound() + axis.getUpperBound())/2;
@@ -113,6 +133,17 @@ public class AddRobotsController {
      */
     private Spinner<Double> getCoordinateSpinner(double defaultValue) {
         Spinner<Double> spinner = new Spinner<>(-Double.MAX_VALUE, Double.MAX_VALUE, defaultValue, 0.1);
+        spinner.setEditable(true);
+        return spinner;
+    }
+
+    /**
+     * Returns a spinner used as input for a velocity value.
+     *
+     * @return the velocity spinner.
+     */
+    private Spinner<Double> getVelocitySpinner() {
+        Spinner<Double> spinner = new Spinner<>(0, Double.MAX_VALUE, 0, 0.1);
         spinner.setEditable(true);
         return spinner;
     }
@@ -135,8 +166,9 @@ public class AddRobotsController {
      */
     @FXML
     private void onAddRobotsCommand(Event event) {
-        addRobotsFromPositions();
-        addRobotsFromRanges();
+        if (!positionsTableList.isEmpty()) placeRobotsFromPositions();
+        if (!rangesTableList.isEmpty()) placeRobotsFromRanges();
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     /**
@@ -146,19 +178,49 @@ public class AddRobotsController {
      */
     @FXML
     private void onCancelCommand(Event event) {
-
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
-    private void addRobotsFromPositions() {
-        //TODO
+    /**
+     * This method is used to place new robots int the simulation through the controller
+     * from data in the <code>positionsTable</code>.
+     */
+    private void placeRobotsFromPositions() {
+        Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> robotMap = new HashMap<>();
+        this.positionsTableList
+                .stream()
+                .forEach(list -> robotMap.put(
+                        new Robot<>(
+                                new SurfaceDirection(list.get(2).getValue(), list.get(3).getValue()),
+                                list.get(4).getValue()),
+                        new SurfacePosition(list.get(0).getValue(), list.get(1).getValue()))
+        );
+
+        this.controller.placeItems(robotMap);
     }
 
-    private void addRobotsFromRanges() {
-        //TODO
+    /**
+     * This method is used to place new robots int the simulation through the controller
+     * from data in the <code>rangesTable</code>.
+     */
+    private void placeRobotsFromRanges() {
+        Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> robotMap = new HashMap<>();
+        this.rangesTableList
+                .stream()
+                .forEach(list -> {
+                            for(int i=0; i<robotNumberList.get(rangesTableList.indexOf(list)).getValue(); i++) {
+                                robotMap.put(
+                                        new Robot<>(
+                                                new SurfaceDirection(list.get(4).getValue(), list.get(5).getValue()),
+                                                list.get(6).getValue()),
+                                        SurfacePosition.randomPositionInRanges(
+                                                new DoubleRange(list.get(0).getValue(), list.get(1).getValue()),
+                                                new DoubleRange(list.get(2).getValue(), list.get(3).getValue())
+                                        ));
+                            }
+                        }
+                );
+
+        this.controller.placeItems(robotMap);
     }
-
-
-
-
-
 }

@@ -35,7 +35,7 @@ public record SurfacePosition(double x, double y) implements Position<SurfacePos
     }
 
     /**
-     * Returns a random position such that his coordinates are chosen randomly respectively in the
+     * Returns a random position such that its coordinates are chosen randomly respectively in the
      * given ranges rangeX and rangeY.
      *
      * @param rangeX the range from witch x coordinate is chosen
@@ -47,7 +47,7 @@ public record SurfacePosition(double x, double y) implements Position<SurfacePos
     }
 
     /**
-     * Returns a seeded random position such that his coordinates are chosen randomly respectively in the
+     * Returns a seeded random position such that its coordinates are chosen randomly respectively in the
      * given ranges rangeX and rangeY.
      *
      * @param rangeX the range from witch x coordinate is chosen.

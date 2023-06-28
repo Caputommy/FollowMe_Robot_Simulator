@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label prefHeight="22.0" prefWidth="600.0" style="-fx-background-color: #E0FFFF; -fx-border-color: #AAA;" text="Robots to be added in selected positions">
@@ -26,14 +25,25 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="29.0" prefWidth="600.0" VBox.vgrow="NEVER">
+        <buttons>
+          <Button fx:id="addPositionRowButton" alignment="CENTER" mnemonicParsing="false" onAction="#onAddPositionRowCommand" text="Add row" textAlignment="CENTER" />
+        </buttons>
+         <padding>
+            <Insets right="265.0" />
+         </padding>
+      </ButtonBar>
       <ScrollPane prefHeight="135.0" prefWidth="600.0">
          <content>
             <Pane maxWidth="-Infinity" prefWidth="585.0">
                <children>
-                  <GridPane fx:id="positionsTable" alignment="CENTER" gridLinesVisible="true" layoutX="197.0" layoutY="14.0" prefHeight="20.0" prefWidth="200.0">
+                  <GridPane fx:id="positionsTable" alignment="CENTER" gridLinesVisible="true" layoutX="134.0" layoutY="14.0" prefHeight="20.0" prefWidth="325.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints fillHeight="false" maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="TOP" vgrow="SOMETIMES" />
@@ -41,6 +51,9 @@
                      <children>
                         <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #E0FFFF;" text="X" textAlignment="CENTER" />
                         <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #E0FFFF;" text="Y" textAlignment="CENTER" GridPane.columnIndex="1" />
+                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #DCDCDC;" text="Dir X" textAlignment="CENTER" GridPane.columnIndex="2" />
+                        <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #DCDCDC;" text="Velocity" textAlignment="CENTER" GridPane.columnIndex="4" />
+                        <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #DCDCDC;" text="Dir Y" textAlignment="CENTER" GridPane.columnIndex="3" />
                      </children>
                   </GridPane>
                </children>
@@ -50,14 +63,6 @@
             </Pane>
          </content>
       </ScrollPane>
-      <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="29.0" prefWidth="600.0" VBox.vgrow="NEVER">
-        <buttons>
-          <Button fx:id="addPositionRowButton" alignment="CENTER" mnemonicParsing="false" onAction="#onAddPositionRowCommand" text="Add row" textAlignment="CENTER" />
-        </buttons>
-         <padding>
-            <Insets right="265.0" />
-         </padding>
-      </ButtonBar>
       <Label prefHeight="22.0" prefWidth="600.0" style="-fx-background-color: #E0FFFF; -fx-border-color: #AAA;" text="Robots to be added in random positions withing range">
          <padding>
             <Insets left="5.0" />
@@ -66,12 +71,23 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="29.0" prefWidth="418.0">
+         <buttons>
+            <Button fx:id="addRangeRowButton" alignment="CENTER" mnemonicParsing="false" onAction="#OnAddRangeRowCommand" text="Add row" textAlignment="CENTER" />
+         </buttons>
+         <padding>
+            <Insets right="265.0" />
+         </padding>
+      </ButtonBar>
       <ScrollPane prefHeight="135.0" prefWidth="600.0">
          <content>
             <Pane maxWidth="-Infinity" prefWidth="585.0">
                <children>
-                  <GridPane fx:id="rangesTable" alignment="CENTER" gridLinesVisible="true" layoutX="48.0" layoutY="14.0" prefHeight="20.0" prefWidth="500.0">
+                  <GridPane fx:id="rangesTable" alignment="CENTER" gridLinesVisible="true" layoutX="38.0" layoutY="14.0" prefHeight="20.0" prefWidth="520.0">
                      <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -82,11 +98,14 @@
                         <RowConstraints fillHeight="false" maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="TOP" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #E0FFFF;" text="#Robots" textAlignment="CENTER" />
+                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #AFEEEE;" text="#Robots" textAlignment="CENTER" />
                         <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #E0FFFF;" text="min(X)" textAlignment="CENTER" GridPane.columnIndex="1" />
                         <Label alignment="CENTER" layoutX="110.0" layoutY="10.0" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #E0FFFF;" text="max(X)" textAlignment="CENTER" GridPane.columnIndex="2" />
                         <Label alignment="CENTER" layoutX="110.0" layoutY="10.0" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #E0FFFF;" text="min(Y)" textAlignment="CENTER" GridPane.columnIndex="3" />
                         <Label alignment="CENTER" layoutX="110.0" layoutY="10.0" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #E0FFFF;" text="max(Y)" textAlignment="CENTER" GridPane.columnIndex="4" />
+                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #DCDCDC;" text="Dir X" textAlignment="CENTER" GridPane.columnIndex="5" />
+                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #DCDCDC;" text="Dir Y" textAlignment="CENTER" GridPane.columnIndex="6" />
+                        <Label alignment="CENTER" prefHeight="20.0" prefWidth="240.0" style="-fx-background-color: #DCDCDC;" text="Velocity" textAlignment="CENTER" GridPane.columnIndex="7" />
                      </children>
                   </GridPane>
                </children>
@@ -96,14 +115,6 @@
             </Pane>
          </content>
       </ScrollPane>
-      <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="29.0" prefWidth="418.0">
-         <buttons>
-            <Button fx:id="addRangeRowButton" alignment="CENTER" mnemonicParsing="false" onAction="#OnAddRangeRowCommand" text="Add row" textAlignment="CENTER" />
-         </buttons>
-         <padding>
-            <Insets right="265.0" />
-         </padding>
-      </ButtonBar>
       <ButtonBar prefHeight="39.0" prefWidth="600.0">
         <buttons>
           <Button fx:id="addRobotsButton" defaultButton="true" mnemonicParsing="false" onAction="#onAddRobotsCommand" text="Add robots" textAlignment="CENTER" />

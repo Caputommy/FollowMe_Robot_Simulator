@@ -194,7 +194,7 @@
                               <Insets bottom="5.0" left="5.0" top="5.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="clearRobotsButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                        <Button fx:id="clearRobotsButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#onClearRobotsCommand" prefHeight="70.0" prefWidth="70.0">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>

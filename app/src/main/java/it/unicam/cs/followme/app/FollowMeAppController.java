@@ -11,26 +11,36 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.RadialGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * JavaFX Controller of FollowMeApp.
@@ -110,6 +120,16 @@ public class FollowMeAppController {
     private final Color areaColor = new Color(0.0, 1.0, 1.0, 0.25);
 
     /**
+     * Map used to associate each robot of the model to a shape in the <code>robotsPane</code>.
+     */
+    private final Map<Robot<SurfacePosition, FollowMeLabel>, HBox> shownRobotsMap = new HashMap<>();
+
+    /**
+     * Radius dimension of the shown robots.
+     */
+    private final double robotRadius = 0.1;
+
+    /**
      * Style used for the labels.
      */
     private final String labelStyle =
@@ -138,6 +158,10 @@ public class FollowMeAppController {
         paceTimeSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(
                 0.1, Double.MAX_VALUE,
                 SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME, 0.1));
+        paceTimeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+                controller.setInstructionPace(newValue);
+                showNewSimulationSetting();
+            });
     }
 
     private void initPlaySecondsSpinner() {
@@ -152,13 +176,13 @@ public class FollowMeAppController {
     }
 
     /**
-     * Resets the stopwatch and clears the robot map.
+     * Resets the stopwatch and refreshes the robot map.
      * This method is invoked whenever the current simulation execution is reset due to the change of
      * one of its core settings.
      */
     private void showNewSimulationSetting() {
         stopwatchLabel.setText("0:00");
-        //Clear shown robots
+        drawRobots();
         //TODO
     }
 
@@ -272,7 +296,10 @@ public class FollowMeAppController {
         Label label = getLabelFromArea(circleArea);
         label.setMaxSize(circle.getRadius()*2, circle.getRadius()*2);
         StackPane circlePane = new StackPane(circle, label);
-        showChildOnPane(environmentPane, circlePane, position.mapCoordinates(x -> x - circleArea.getRadius()));
+        showChildOnPane(environmentPane, circlePane, new SurfacePosition(
+                position.getX()-circleArea.getRadius(),
+                position.getY()+circleArea.getRadius()
+        ));
     }
 
     /**
@@ -289,7 +316,7 @@ public class FollowMeAppController {
         StackPane rectanglePane = new StackPane(rectangle, label);
         showChildOnPane(environmentPane, rectanglePane, new SurfacePosition(
                 position.getX()-rectangleArea.getWidth()/2,
-                position.getY()-rectangleArea.getHeight()/2
+                position.getY()+rectangleArea.getHeight()/2
         ));
     }
 
@@ -307,17 +334,17 @@ public class FollowMeAppController {
     }
 
     /**
-     * This method is used to show the given child on the given anchor pane in the given absolute position.
+     * This method is used to show the given child on the given pane in the given absolute position.
      * The effective position is calculated upon the current state of the axes and represents the distance between
-     * the left-bottom corner of the child and the left-bottom corner of the pane.
+     * the given position and the left-bottom corner of the pane.
      *
      * @param pane the anchor pane where to show the child.
      * @param child the child node to be shown.
      * @param absPosition the axis-related absolute position.
      */
-    private void showChildOnPane(AnchorPane pane, Node child, SurfacePosition absPosition) {
-        AnchorPane.setLeftAnchor(child, scale(absPosition.getX()-xAxis.getLowerBound()));
-        AnchorPane.setBottomAnchor(child, scale(absPosition.getY()-yAxis.getLowerBound()));
+    private void showChildOnPane(Pane pane, Node child, SurfacePosition absPosition) {
+        child.setLayoutX(scale(absPosition.getX()-xAxis.getLowerBound()));
+        child.setLayoutY(pane.getHeight() - scale(absPosition.getY()-yAxis.getLowerBound()));
         pane.getChildren().add(child);
     }
 
@@ -398,7 +425,7 @@ public class FollowMeAppController {
             yAxis.setLowerBound(yAxis.getLowerBound()-(sizeDiff/2));
             yAxis.setUpperBound(yAxis.getUpperBound()+(sizeDiff/2));
             drawEnvironment();
-            //TODO drawRobots
+            drawRobots();
         }
     }
 
@@ -425,7 +452,7 @@ public class FollowMeAppController {
     private void moveView(SurfaceDirection direction) {
         moveAxes(direction);
         drawEnvironment();
-        //TODO drawRobots
+        drawRobots();
     }
 
     /**
@@ -452,17 +479,27 @@ public class FollowMeAppController {
         return yAxis.getUpperBound() - yAxis.getLowerBound();
     }
 
+    /**
+     * This is the method invoked when the add robots button is pressed.
+     *
+     * @param event the triggering event.
+     */
     @FXML
     private void onAddRobotsCommand(Event event) {
         try {
-            Stage addRobotStage = getAddRobotStage();
-            addRobotStage.showAndWait();
-            //TODO drawRobots
+            getAddRobotStage().showAndWait();
+            drawRobots();
         } catch (IOException e) {
             showErrorAlert(e.getMessage());
         }
     }
 
+    /**
+     * Builds and returns a new stage offering functionalities to add new robots to the simulation.
+     *
+     * @return the stage used to add robots.
+     * @throws IOException if an I/O error occurs while leading the stage scene.
+     */
     private Stage getAddRobotStage() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_robots_scene.fxml"));
         loader.setController(new AddRobotsController(controller, xAxis, yAxis));
@@ -473,6 +510,69 @@ public class FollowMeAppController {
         addRobotStage.setResizable(false);
         addRobotStage.initModality(Modality.APPLICATION_MODAL);
         return addRobotStage;
+    }
+
+    /**
+     * This method is used to draw the new robot map obtained from the controller, replacing the current one shown
+     * and updating the <code>shownRobotsMap</code> accordingly.
+     */
+    private void drawRobots() {
+        robotsPane.getChildren().clear();
+        shownRobotsMap.clear();
+        controller.getCurrentItemMap().entrySet()
+                .stream()
+                .forEach(e -> {
+                    HBox robotBox = getRobotHBox(e.getKey());
+                    showChildOnPane(robotsPane, robotBox, new SurfacePosition(
+                            e.getValue().getX() - robotRadius,
+                            e.getValue().getY() + robotRadius));
+                    shownRobotsMap.put(e.getKey(), robotBox);
+                });
+        clipPane(robotsPane);
+    }
+
+    /**
+     * Returns a new HBox as the graphic representation of a robot, containing a Circle and a label
+     * for each condition signaled by the robot.
+     *
+     * @return a HBox representing a robot.
+     */
+    private HBox getRobotHBox(Robot<SurfacePosition, FollowMeLabel> robot) {
+        Circle robotCircle = new Circle(scale(robotRadius), new Color(0.7, 0.7, 0.7, 1.0));
+        robotCircle.setStroke(new Color(0.0, 0.0, 0.0, 1.0));
+        robotCircle.setStrokeWidth(1);
+        HBox robotBox = new HBox(robotCircle);
+        if (!robot.getConditions().isEmpty()) {
+            robotBox.getChildren().add(getMegaphoneImageView());
+            robotBox.getChildren().addAll(robot.getConditions()
+                    .stream()
+                    .map(c -> {
+                        Label conditionLabel = new Label(c.label());
+                        conditionLabel.setMaxHeight(robotCircle.getRadius());
+                        conditionLabel.setStyle("-fx-text-fill:blue; -fx-padding:0 0 0 3");
+                        return conditionLabel;
+                    })
+                    .toList());
+        }
+        return robotBox;
+    }
+
+    private ImageView getMegaphoneImageView() {
+        ImageView megaphone = new ImageView("/icons/MegaphoneIcon.png");
+        megaphone.setFitHeight(25);
+        megaphone.setFitWidth(25);
+        return megaphone;
+    }
+
+    /**
+     * This is the method invoked when the clear robots button is pressed.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onClearRobotsCommand(Event event) {
+        controller.clearPlacedItems();
+        drawRobots();
     }
 
     @FXML
