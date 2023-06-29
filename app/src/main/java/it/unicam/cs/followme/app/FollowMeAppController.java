@@ -493,6 +493,7 @@ public class FollowMeAppController {
         Scene addRobotScene = new Scene(loader.load(), AddRobotsController.WIDTH, AddRobotsController.HEIGHT);
         Stage addRobotStage = new Stage();
         addRobotStage.setTitle("Add Robots");
+        addRobotStage.getIcons().add(new Image("/icons/AddRobotIcon.png"));
         addRobotStage.setScene(addRobotScene);
         addRobotStage.setResizable(false);
         addRobotStage.initModality(Modality.APPLICATION_MODAL);
@@ -667,7 +668,7 @@ public class FollowMeAppController {
      */
     private void setAnimationMode(boolean animated) {
         this.simulationStateIcon.setImage((animated ? playImage : stopImage));
-        controlsPane.setDisable(!animated);
+        controlsPane.setDisable(animated);
     }
 
     /**
