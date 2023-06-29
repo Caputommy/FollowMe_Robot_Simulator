@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,12 +87,20 @@ public class MovingItemTrackerTest {
     }
 
     @Test
+    public void shouldAddAll() {
+        Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> map = new HashMap<>();
+        for (int i=0; i<5; i++) map.put(robots.get(i), new SurfacePosition(i, i));
+
+        tracker.addAllItems(map);
+        for (int i=0; i<5; i++) assertTrue(tracker.isPresent(robots.get(i)));
+    }
+
+    @Test
     public void shouldMoveAll() {
         robots.get(1).setCurrentDirection(new SurfaceDirection (1, 0));
         robots.get(1).setCurrentVelocity(1);
         robots.get(2).setCurrentDirection(new SurfaceDirection (0.5, -0.5));
         robots.get(2).setCurrentVelocity(2);
-        robots.get(3).setCurrentDirection(new SurfaceDirection (1, 0));
         robots.get(3).setCurrentVelocity(0);
 
         tracker.addItem(robots.get(1), new SurfacePosition(2,3));

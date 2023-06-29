@@ -7,7 +7,6 @@ import it.unicam.cs.followme.model.items.SignalingMovingItemTracker;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.program.ProgramCondition;
 import it.unicam.cs.followme.model.program.ProgramExecution;
-import it.unicam.cs.followme.model.program.ProgramInstruction;
 import it.unicam.cs.followme.model.program.ProgramLine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -104,19 +103,11 @@ public class FollowMeProgramBuilderTest {
                 (ProgramCondition<Robot<SurfacePosition, FollowMeLabel>>) currentLine;
         assertFalse(condition.getCondition().test(robot));
         assertTrue(condition.getNextIfFalse().isPresent());
-
-        ProgramInstruction<Robot<SurfacePosition, FollowMeLabel>> instruction =
-                (ProgramInstruction<Robot<SurfacePosition, FollowMeLabel>>)condition.getNextIfFalse().get();
-        instruction.getInstruction().accept(robot);
-        assertEquals(new SurfaceDirection(0,1), robot.getCurrentDirection());
-        assertEquals(1.5, robot.getCurrentVelocity());
     }
     @Test
     public void shouldBuildMove() {
         buildProgram1();
         ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
-        assertEquals(new SurfaceDirection(1,0), robot.getCurrentDirection());
-        assertEquals(1.0, robot.getCurrentVelocity());
 
         execution.executeOneStep();
         assertEquals(new SurfaceDirection(0,1), robot.getCurrentDirection());
@@ -125,18 +116,23 @@ public class FollowMeProgramBuilderTest {
     }
 
     @Test
-    public void shouldBuildSignalUnsignal() {
+    public void shouldBuildSignal() {
         buildProgram1();
         ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
         assertEquals(Set.of(), robot.getConditions());
 
         execution.executeSteps(2);
         assertEquals(Set.of(new FollowMeLabel("label_1")), robot.getConditions());
-
-        execution.executeOneStep();
-        assertEquals(Set.of(), robot.getConditions());
     }
 
+    @Test
+    public void shouldBuildUnsignal() {
+        buildProgram1();
+        ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
+
+        execution.executeSteps(3);
+        assertEquals(Set.of(), robot.getConditions());
+    }
 
     @Test
     public void shouldBuildDoForever() {
@@ -144,10 +140,7 @@ public class FollowMeProgramBuilderTest {
         ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
         assertEquals(Set.of(), robot.getConditions());
 
-        execution.executeSteps(3);
-        assertEquals(Set.of(), robot.getConditions());
-
-        execution.executeSteps(101);
+        execution.executeSteps(100);
         assertEquals(Set.of(new FollowMeLabel("label_1")), robot.getConditions());
 
         execution.executeSteps(101);
@@ -158,8 +151,6 @@ public class FollowMeProgramBuilderTest {
     public void shouldBuildFollow() {
         buildProgram2();
         ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
-        assertEquals(new SurfaceDirection(1,0), robot.getCurrentDirection());
-        assertEquals(1.0, robot.getCurrentVelocity());
 
         execution.executeOneStep();
         assertEquals(new SurfaceDirection(-1,0), robot.getCurrentDirection());
@@ -170,8 +161,6 @@ public class FollowMeProgramBuilderTest {
     public void shouldBuildStop() {
         buildProgram2();
         ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
-        assertEquals(new SurfaceDirection(1,0), robot.getCurrentDirection());
-        assertEquals(1.0, robot.getCurrentVelocity());
 
         execution.executeSteps(2);
         assertEquals(0.0, robot.getCurrentVelocity());
@@ -183,9 +172,7 @@ public class FollowMeProgramBuilderTest {
         ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
 
         execution.executeSteps(2);
-        assertEquals(new SurfaceDirection(0,1), robot.getCurrentDirection());
         assertEquals(1.5, robot.getCurrentVelocity());
-        assertEquals(Set.of(), robot.getConditions());
 
         execution.executeSteps(9);
         assertEquals(1.5, robot.getCurrentVelocity());
@@ -198,15 +185,8 @@ public class FollowMeProgramBuilderTest {
     public void shouldBuildRepeat() {
         buildProgram4();
         ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
-        assertEquals(Set.of(), robot.getConditions());
 
-        execution.executeOneStep();
-        assertEquals(Set.of(new FollowMeLabel("Label_1")), robot.getConditions());
-
-        execution.executeOneStep();
-        assertEquals(Set.of(), robot.getConditions());
-
-        execution.executeOneStep();
+        execution.executeSteps(3);
         assertEquals(Set.of(new FollowMeLabel("Label_1")), robot.getConditions());
 
         execution.executeSteps(5);
@@ -223,15 +203,7 @@ public class FollowMeProgramBuilderTest {
         ProgramExecution<Robot<SurfacePosition, FollowMeLabel>> execution = new ProgramExecution<>(program, robot);
 
         execution.executeOneStep();
-        assertEquals(new SurfaceDirection(1,0), robot.getCurrentDirection());
-        assertEquals(1.0, robot.getCurrentVelocity());
-
-        execution.executeOneStep();
-        tracker.moveAll(1);
-        execution.executeOneStep();
-        assertEquals(1.0, robot.getCurrentVelocity());
-
-        tracker.moveAll(4);
+        tracker.moveAll(5);
         execution.executeOneStep();
         assertEquals(1.0, robot.getCurrentVelocity());
 

@@ -131,7 +131,6 @@ public class FollowMeAppController {
 
     public void initialize() {
         initSpinners();
-        showNewSimulationSetting();
     }
 
     private void initSpinners() {
@@ -526,9 +525,7 @@ public class FollowMeAppController {
      * @return a HBox representing a robot.
      */
     private HBox getRobotHBox(Robot<SurfacePosition, FollowMeLabel> robot) {
-        Circle robotCircle = new Circle(scale(robotRadius), new Color(0.7, 0.7, 0.7, 1.0));
-        robotCircle.setStroke(new Color(0.0, 0.0, 0.0, 1.0));
-        robotCircle.setStrokeWidth(1);
+        Circle robotCircle = getRobotCircle();
         HBox robotBox = new HBox(robotCircle);
         if (!robot.getConditions().isEmpty()) {
             robotBox.getChildren().add(getMegaphoneImageView());
@@ -537,12 +534,24 @@ public class FollowMeAppController {
                     .map(c -> {
                         Label conditionLabel = new Label(c.label());
                         conditionLabel.setMaxHeight(robotCircle.getRadius());
-                        conditionLabel.setStyle("-fx-text-fill:blue; -fx-padding:0 0 0 3");
+                        conditionLabel.setStyle(robotLabelStyle);
                         return conditionLabel;
                     })
                     .toList());
         }
         return robotBox;
+    }
+
+    /**
+     * Returns a new {@link Circle} for the visual representation of a robot.
+     *
+     * @return a circle representing a robot.
+     */
+    private Circle getRobotCircle() {
+        Circle robotCircle = new Circle(scale(robotRadius), new Color(0.7, 0.7, 0.7, 1.0));
+        robotCircle.setStroke(new Color(0.0, 0.0, 0.0, 1.0));
+        robotCircle.setStrokeWidth(1);
+        return robotCircle;
     }
 
     /**
@@ -635,15 +644,15 @@ public class FollowMeAppController {
             controller.runFor(secondsToNextInstruction);
             ParallelTransition animation = getTransitionAnimation(controller.getCurrentItemMap(), secondsToNextInstruction);
             attachStopWatchToAnimation(animation);
-            enterAnimationMode();
+            setAnimationMode(true);
             animation.play();
             animation.setOnFinished(event -> {
                 drawRobots();
                 setStopWatch((int)controller.getSimulationCurrentTime()*1000);
-                exitAnimationMode();
                 runWithAnimation(seconds - secondsToNextInstruction);
             });
         }
+        else setAnimationMode(false);
     }
 
     private double secondsToNextInstruction() {
@@ -651,19 +660,14 @@ public class FollowMeAppController {
     }
 
     /**
-     * Sets the scene in the animation mode, displaying the play icon and disabling controls.
+     * Sets the scene animation mode according to the given flag, setting the simulation state icon
+     * to play/stop icon and disabling/enabling controls.
+     *
+     * @param animated the flag that sets the animation mode.
      */
-    private void enterAnimationMode() {
-        this.simulationStateIcon.setImage(playImage);
-        controlsPane.setDisable(true);
-    }
-
-    /**
-     * Sets the scene out from the animation mode, displaying the stop icon and enabling controls.
-     */
-    private void exitAnimationMode() {
-        this.simulationStateIcon.setImage(stopImage);
-        controlsPane.setDisable(false);
+    private void setAnimationMode(boolean animated) {
+        this.simulationStateIcon.setImage((animated ? playImage : stopImage));
+        controlsPane.setDisable(!animated);
     }
 
     /**
@@ -720,7 +724,7 @@ public class FollowMeAppController {
      * @param animation the animation to attach the stopwatch to.
      */
     private void attachStopWatchToAnimation(Animation animation) {
-        animation.currentTimeProperty().addListener((ov, oldValue, newValue) ->
+        animation.currentTimeProperty().addListener((obs, oldValue, newValue) ->
                 setStopWatch(currentStopWatchMillis + (int)(newValue.toMillis() - oldValue.toMillis())));
     }
 }
