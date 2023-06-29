@@ -29,20 +29,31 @@ public class SignalingMovingItemTrackerTest {
 
     @Test
     public void shouldCaptureSignals() {
-        Set<FollowMeLabel> expected = new HashSet<>();
-        expected.add(new FollowMeLabel("Label_1"));
-        expected.add(new FollowMeLabel("Label_2"));
-        expected.add(new FollowMeLabel("Label_3"));
+        Set<FollowMeLabel> expected = new HashSet<>(Set.of(
+                new FollowMeLabel("Label_1"), new FollowMeLabel("Label_2"), new FollowMeLabel("Label_3")));
         assertEquals(expected, tracker.captureSignaledConditions(new SurfacePosition(4,0), 3));
+    }
+
+    @Test
+    public void shouldNotCaptureSignals() {
+        Set<FollowMeLabel> expected = new HashSet<>(Set.of(
+                new FollowMeLabel("Label_1"), new FollowMeLabel("Label_2"), new FollowMeLabel("Label_3")));
 
         robots.get(2).signal(new FollowMeLabel("Label_2_1"));
         robots.get(3).signal(new FollowMeLabel("Label_3_1"));
         robots.get(3).signal(new FollowMeLabel("Label_3_2"));
         assertNotEquals(expected, tracker.captureSignaledConditions(new SurfacePosition(4,0), 3));
+    }
 
-        expected.add(new FollowMeLabel("Label_2_1"));
-        expected.add(new FollowMeLabel("Label_3_1"));
-        expected.add(new FollowMeLabel("Label_3_2"));
+    @Test
+    public void shouldCaptureNewSignals() {
+        Set<FollowMeLabel> expected = new HashSet<>(Set.of(
+                new FollowMeLabel("Label_1"), new FollowMeLabel("Label_2"), new FollowMeLabel("Label_3"),
+                new FollowMeLabel("Label_2_1"), new FollowMeLabel("Label_3_1"), new FollowMeLabel("Label_3_2")));
+
+        robots.get(2).signal(new FollowMeLabel("Label_2_1"));
+        robots.get(3).signal(new FollowMeLabel("Label_3_1"));
+        robots.get(3).signal(new FollowMeLabel("Label_3_2"));
         assertEquals(expected, tracker.captureSignaledConditions(new SurfacePosition(4,0), 3));
     }
 
