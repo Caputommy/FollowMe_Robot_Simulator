@@ -6,6 +6,9 @@ import it.unicam.cs.followme.model.environment.*;
 import it.unicam.cs.followme.model.items.Robot;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.simulation.SignalingItemSimulationExecutor;
+import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,33 +17,21 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.RadialGradient;
-import javafx.scene.paint.Stop;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * JavaFX Controller of FollowMeApp.
@@ -68,41 +59,22 @@ public class FollowMeAppController {
     private AnchorPane robotsPane;
 
     @FXML
-    private Button loadEnvironmentButton;
-
-    @FXML
-    private Button loadProgramButton;
+    private GridPane controlsPane;
 
     @FXML
     private Spinner<Double> paceTimeSpinner;
 
     @FXML
-    private Button addRobotsButton;
-
-    @FXML
-    private Button clearRobotsButton;
-
-    @FXML
     private Spinner<Double> playSecondsSpinner;
+
     @FXML
-    private Button playSecondsButton;
+    private CheckBox playSecondsAnimated;
 
     @FXML
     private Spinner<Integer> playStepsSpinner;
-    @FXML
-    private Button playStepsButton;
 
     @FXML
-    private Button playOneStepButton;
-
-    @FXML
-    private Button moveViewLeftButton;
-    @FXML
-    private Button moveViewUpButton;
-    @FXML
-    private Button moveViewDownButton;
-    @FXML
-    private Button moveViewRightButton;
+    private CheckBox playStepsAnimated;
 
     @FXML
     private Slider zoomViewSlider;
@@ -110,6 +82,17 @@ public class FollowMeAppController {
 
     private final Controller<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> controller =
             Controller.getFollowMeController();
+
+    /**
+     * Map used to associate each robot of the model to a shape in the <code>robotsPane</code>, in order
+     * to execute animations.
+     */
+    private final Map<Robot<SurfacePosition, FollowMeLabel>, HBox> shownRobotsMap = new HashMap<>();
+
+    /**
+     * Int value in milliseconds of the displayed elapsed time on the stop watch.
+     */
+    private int currentStopWatchMillis = 0;
 
     private final Image stopImage = new Image("/icons/StopIcon.png");
     private final Image playImage = new Image("/icons/PlayIcon.png");
@@ -120,22 +103,24 @@ public class FollowMeAppController {
     private final Color areaColor = new Color(0.0, 1.0, 1.0, 0.25);
 
     /**
-     * Map used to associate each robot of the model to a shape in the <code>robotsPane</code>.
+     * Style used for area labels.
      */
-    private final Map<Robot<SurfacePosition, FollowMeLabel>, HBox> shownRobotsMap = new HashMap<>();
+    private final String areaLabelStyle =
+            "-fx-font-family: \"Roboto\";" +
+                    "-fx-font-style: italic;" +
+                    "-fx-font-size: 12px;";
 
     /**
-     * Radius dimension of the shown robots.
+     * Radius dimension of shown robots.
      */
     private final double robotRadius = 0.1;
 
     /**
-     * Style used for the labels.
+     * Style used for robot condition labels.
      */
-    private final String labelStyle =
-            "-fx-font-family: \"Roboto\";" +
-            "-fx-font-style: italic;" +
-            "-fx-font-size: 12px;";
+    private final String robotLabelStyle =
+            "-fx-text-fill:blue;"+
+                    "-fx-padding:0 0 0 3";
 
     /**
      * Factor that represent the proportion of the view that is hidden/showed in response to
@@ -146,6 +131,7 @@ public class FollowMeAppController {
 
     public void initialize() {
         initSpinners();
+        showNewSimulationSetting();
     }
 
     private void initSpinners() {
@@ -176,18 +162,7 @@ public class FollowMeAppController {
     }
 
     /**
-     * Resets the stopwatch and refreshes the robot map.
-     * This method is invoked whenever the current simulation execution is reset due to the change of
-     * one of its core settings.
-     */
-    private void showNewSimulationSetting() {
-        stopwatchLabel.setText("0:00");
-        drawRobots();
-        //TODO
-    }
-
-    /**
-     * Method used to handle the load environment command.
+     * Method used to handle the "Load environment" command.
      *
      * @param event the triggering event.
      */
@@ -207,7 +182,15 @@ public class FollowMeAppController {
     }
 
     /**
-     * Method used to handle the load program command.
+     * This method is invoked whenever the current simulation execution is reset due to the change of
+     * one of its core settings.
+     */
+    private void showNewSimulationSetting() {
+        setStopWatch(0);
+    }
+
+    /**
+     * Method used to handle the "Load program" command.
      *
      * @param event the triggering event.
      */
@@ -328,7 +311,7 @@ public class FollowMeAppController {
      */
     private Label getLabelFromArea(Area<?, FollowMeLabel> area) {
         Label labelText = new Label(area.getLabel().label());
-        labelText.setStyle(labelStyle);
+        labelText.setStyle(areaLabelStyle);
         labelText.setAlignment(Pos.CENTER);
         return labelText;
     }
@@ -343,9 +326,29 @@ public class FollowMeAppController {
      * @param absPosition the axis-related absolute position.
      */
     private void showChildOnPane(Pane pane, Node child, SurfacePosition absPosition) {
-        child.setLayoutX(scale(absPosition.getX()-xAxis.getLowerBound()));
-        child.setLayoutY(pane.getHeight() - scale(absPosition.getY()-yAxis.getLowerBound()));
+        child.setTranslateX(getLayoutXValue(absPosition.getX()));
+        child.setTranslateY(getLayoutYValue(absPosition.getY()));
         pane.getChildren().add(child);
+    }
+
+    /**
+     * Returns the corresponding layout x-coordinate on the simulation pane from a given x-coordinate.
+     *
+     * @param xCoordinate the x coordinate value used in the simulation.
+     * @return the corresponding layout value.
+     */
+    private double getLayoutXValue(double xCoordinate) {
+        return scale(xCoordinate-xAxis.getLowerBound());
+    }
+
+    /**
+     * Returns the corresponding layout y-coordinate on the simulation pane from a given y-coordinate.
+     *
+     * @param yCoordinate the y coordinate value used in the simulation.
+     * @return the corresponding layout value.
+     */
+    private double getLayoutYValue(double yCoordinate) {
+        return robotsPane.getHeight() - scale(yCoordinate-yAxis.getLowerBound());
     }
 
     /**
@@ -430,21 +433,6 @@ public class FollowMeAppController {
     }
 
     /**
-     * This is the method invoked to handle key events.
-     *
-     * @param event the triggering event.
-     */
-    @FXML
-    private void onKeyPressed(KeyEvent event) {
-        switch (event.getCode()) {
-            case LEFT  -> moveView(new SurfaceDirection(-1, 0));
-            case UP    -> moveView(new SurfaceDirection(0, 1));
-            case DOWN  -> moveView(new SurfaceDirection(0, -1));
-            case RIGHT -> moveView(new SurfaceDirection(1, 0));
-        }
-    }
-
-    /**
      * This method is used to scroll the view in the given direction.
      *
      * @param direction the direction of the movement.
@@ -480,7 +468,7 @@ public class FollowMeAppController {
     }
 
     /**
-     * This is the method invoked when the add robots button is pressed.
+     * This is the method invoked when the "Add robots" button is pressed.
      *
      * @param event the triggering event.
      */
@@ -557,6 +545,11 @@ public class FollowMeAppController {
         return robotBox;
     }
 
+    /**
+     * Returns a new instance of a resized megaphone {@link ImageView}, used to decorate labels signaled by robots.
+     *
+     * @return a megaphone image view.
+     */
     private ImageView getMegaphoneImageView() {
         ImageView megaphone = new ImageView("/icons/MegaphoneIcon.png");
         megaphone.setFitHeight(25);
@@ -565,7 +558,7 @@ public class FollowMeAppController {
     }
 
     /**
-     * This is the method invoked when the clear robots button is pressed.
+     * This is the method invoked when the "Clear robots" button is pressed.
      *
      * @param event the triggering event.
      */
@@ -575,8 +568,159 @@ public class FollowMeAppController {
         drawRobots();
     }
 
+    /**
+     * This is the method invoked when the "Play seconds" button is pressed.
+     *
+     * @param event the triggering event.
+     */
     @FXML
     private void onPlaySecondsCommand(Event event) {
-        //TODO
+        double secondsToRun = playSecondsSpinner.getValue();
+        if (playSecondsAnimated.isSelected()) runWithAnimation(secondsToRun);
+        else runWithoutAnimation(secondsToRun);
+    }
+
+    /**
+     * This is the method invoked when the "Play steps" button is pressed.
+     * Note that playing one step of the simulation will always get the simulation to the next point
+     * in time when the current instruction time interval has ended.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onPlayStepsCommand(Event event) {
+        double secondsToRun = ((playStepsSpinner.getValue()-1)*paceTimeSpinner.getValue()) + secondsToNextInstruction();
+        if (playStepsAnimated.isSelected()) runWithAnimation(secondsToRun);
+        else runWithoutAnimation(secondsToRun);
+    }
+
+    /**
+     * This is the method invoked when the "Play one step" button is pressed.
+     * Note that playing one step of the simulation will always get the simulation to the next point
+     * in time when the current instruction time interval has ended.
+     * Furthermore, this method always runs the simulation without any animation.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onPlayOneStepCommand(Event event) {
+        runWithoutAnimation(secondsToNextInstruction());
+    }
+
+    /**
+     * Runs the simulation for the given seconds without any animation, showing the new state of
+     * the simulation immediately.
+     *
+     * @param seconds the seconds to run the simulation.
+     */
+    private void runWithoutAnimation(double seconds) {
+        if (seconds > 0) {
+            controller.runFor(seconds);
+            drawRobots();
+            setStopWatch((int)controller.getSimulationCurrentTime()*1000);
+        }
+    }
+
+    /**
+     * Runs the simulation for the given seconds, showing a real-time animation of the robots' movement and makeing
+     * the stopwatch timer flow.
+     * For each step of the simulation, a different animation is run and possible changes to the set of conditions
+     * signaled by each robot are showed at the end of each animation.
+     *
+     * @param seconds the seconds to run the animated simulation.
+     */
+    private void runWithAnimation(double seconds) {
+        if (seconds > 0) {
+            double secondsToNextInstruction = secondsToNextInstruction();
+            controller.runFor(secondsToNextInstruction);
+            ParallelTransition animation = getTransitionAnimation(controller.getCurrentItemMap(), secondsToNextInstruction);
+            attachStopWatchToAnimation(animation);
+            enterAnimationMode();
+            animation.play();
+            animation.setOnFinished(event -> {
+                drawRobots();
+                setStopWatch((int)controller.getSimulationCurrentTime()*1000);
+                exitAnimationMode();
+                runWithAnimation(seconds - secondsToNextInstruction);
+            });
+        }
+    }
+
+    private double secondsToNextInstruction() {
+        return paceTimeSpinner.getValue() - (controller.getSimulationCurrentTime()%paceTimeSpinner.getValue());
+    }
+
+    /**
+     * Sets the scene in the animation mode, displaying the play icon and disabling controls.
+     */
+    private void enterAnimationMode() {
+        this.simulationStateIcon.setImage(playImage);
+        controlsPane.setDisable(true);
+    }
+
+    /**
+     * Sets the scene out from the animation mode, displaying the stop icon and enabling controls.
+     */
+    private void exitAnimationMode() {
+        this.simulationStateIcon.setImage(stopImage);
+        controlsPane.setDisable(false);
+    }
+
+    /**
+     * Returns an animation of the given duration to move robots from their current position
+     * on the pane to the new given position map.
+     *
+     * @param newMap the new position of robots.
+     * @param secondsDuration the duration of the animation.
+     */
+    private ParallelTransition getTransitionAnimation(Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> newMap, double secondsDuration) {
+        ParallelTransition globalTransition = new ParallelTransition();
+        newMap.entrySet()
+                .stream()
+                .map(e -> getTransitionToPosition(secondsDuration, shownRobotsMap.get(e.getKey()),
+                        new SurfacePosition(e.getValue().getX()-robotRadius, e.getValue().getY()+robotRadius)))
+                .forEach(t -> globalTransition.getChildren().add(t));
+        return globalTransition;
+    }
+
+    /**
+     * Returns the {@link TranslateTransition} object that moves the given <code>node</code> for the given
+     * <code>seconds</code> to the layout position associated with the given simulation position
+     * according to the current state of the axes.
+     *
+     * @param seconds the duration of the transition in seconds.
+     * @param node the node to translate.
+     * @param position the destination position of the translation.
+     * @return the associated translate transition.
+     */
+    private TranslateTransition getTransitionToPosition(double seconds, Node node, SurfacePosition position) {
+        TranslateTransition trans = new TranslateTransition(Duration.seconds(seconds), node);
+        trans.setToX(getLayoutXValue(position.getX()));
+        trans.setToY(getLayoutYValue(position.getY()));
+        return trans;
+    }
+
+    /**
+     * This method is used to set the time of the stopwatch and to display the time amount
+     * on the stopwatch label accordingly.
+     *
+     * @param millis the time amount in millis to set and show.
+     */
+    private void setStopWatch(int millis) {
+        this.stopwatchLabel.setText(String.format("%d:%02d:%02d",
+                millis/60000, (millis/1000)%60, (millis/10)%100));
+        this.currentStopWatchMillis = millis;
+    }
+
+    /**
+     * This method is used to attach the stop watch timer to a given animation.
+     * After the invocation of this method, the stopwatch timer will increase its time along with
+     * time progression of the given animation.
+     *
+     * @param animation the animation to attach the stopwatch to.
+     */
+    private void attachStopWatchToAnimation(Animation animation) {
+        animation.currentTimeProperty().addListener((ov, oldValue, newValue) ->
+                setStopWatch(currentStopWatchMillis + (int)(newValue.toMillis() - oldValue.toMillis())));
     }
 }
