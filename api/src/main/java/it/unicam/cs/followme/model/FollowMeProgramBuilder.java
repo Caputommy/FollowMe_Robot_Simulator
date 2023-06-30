@@ -124,11 +124,14 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
     public void followCommand(String label, double[] args) {
         ProgramInstruction<I> followInstruction = new ProgramInstruction<>((item) -> {
             Set<SurfacePosition> inRangePositions = itemTracker.getSourcePositions(item, new FollowMeLabel(label), args[0]);
-            if (inRangePositions.isEmpty()) {
+            if (inRangePositions.isEmpty() || !itemTracker.isPresent(item)) {
                 DoubleRange range = new DoubleRange(-args[0], args[0]);
                 setRandomDirectionFromRelativeRanges(item, range, range);
             }
-            else item.setCurrentDirection(new SurfaceDirection(SurfacePosition.averageLocation(inRangePositions).get()));
+            else item.setCurrentDirection(new SurfaceDirection(
+                    SurfacePosition.averageLocation(inRangePositions).get()
+                            .combineCoordinates((x1, x2) -> x1 - x2, itemTracker.getCurrentPosition(item).get()))
+            );
             item.setCurrentVelocity(args[1]);
         });
         setCurrentLine(followInstruction);

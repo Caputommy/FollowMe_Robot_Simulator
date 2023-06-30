@@ -153,7 +153,7 @@ public class FollowMeAppController {
 
     private void initPlaySecondsSpinner() {
         playSecondsSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(
-                0.01, Double.MAX_VALUE,
+                0.05, Double.MAX_VALUE,
                 SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME, 0.05));
     }
 
@@ -544,7 +544,7 @@ public class FollowMeAppController {
         if (seconds > 0) {
             controller.runFor(seconds);
             drawRobots();
-            setStopWatch((int)controller.getSimulationCurrentTime()*1000);
+            setStopWatch((int)(controller.getSimulationCurrentTime()*1000));
         }
     }
 
@@ -558,23 +558,24 @@ public class FollowMeAppController {
      */
     private void runWithAnimation(double seconds) {
         if (seconds > 0) {
-            double secondsToNextInstruction = secondsToNextInstruction();
-            controller.runFor(secondsToNextInstruction);
-            ParallelTransition animation = getTransitionAnimation(controller.getCurrentItemMap(), secondsToNextInstruction);
-            attachStopWatchToAnimation(animation);
             setAnimationMode(true);
-            animation.play();
+            double secondsToRun = Math.min(seconds, secondsToNextInstruction());
+            controller.runFor(secondsToRun);
+            ParallelTransition animation = getTransitionAnimation(controller.getCurrentItemMap(), secondsToRun);
+            attachStopWatchToAnimation(animation);
             animation.setOnFinished(event -> {
                 drawRobots();
-                setStopWatch((int)controller.getSimulationCurrentTime()*1000);
-                runWithAnimation(seconds - secondsToNextInstruction);
+                setStopWatch((int)(controller.getSimulationCurrentTime()*1000));
+                System.out.println(seconds - secondsToRun);
+                runWithAnimation(seconds - secondsToRun);
             });
+            animation.play();
         }
         else setAnimationMode(false);
     }
 
     private double secondsToNextInstruction() {
-        return paceTimeSpinner.getValue() - (controller.getSimulationCurrentTime()%paceTimeSpinner.getValue());
+        return paceTimeSpinner.getValue() - (controller.getSimulationCurrentTime() % paceTimeSpinner.getValue());
     }
 
     /**
