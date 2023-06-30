@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Instances of this class are moving and signaling item trackers that are internally represented
- * with a hash map, that link each item to its position.
+ * Instances of this class are moving-signaling item trackers that are internally represented with
+ * a hash map, that link each item to its position.
  * This is the default implementation of {@link SignalingMovingItemTracker} interface.
  *
  * @param <P> type representing the position of the items.

@@ -131,6 +131,8 @@ public class FollowMeAppController {
 
     public void initialize() {
         initSpinners();
+        clipPane(environmentPane);
+        clipPane(robotsPane);
     }
 
     private void initSpinners() {
@@ -161,6 +163,19 @@ public class FollowMeAppController {
     }
 
     /**
+     * This method is used to set a pane clip, in order to clip off all child nodes of the given
+     * {@link Pane} that go beyond its boundaries.
+     *
+     * @param pane the pane to be clipped.
+     */
+    private void clipPane(Pane pane) {
+        Rectangle clipRect = new Rectangle();
+        clipRect.widthProperty().bind(pane.widthProperty());
+        clipRect.heightProperty().bind(pane.heightProperty());
+        pane.setClip(clipRect);
+    }
+
+    /**
      * Method used to handle the "Load environment" command.
      *
      * @param event the triggering event.
@@ -181,42 +196,6 @@ public class FollowMeAppController {
     }
 
     /**
-     * This method is invoked whenever the current simulation execution is reset due to the change of
-     * one of its core settings.
-     */
-    private void showNewSimulationSetting() {
-        setStopWatch(0);
-    }
-
-    /**
-     * Method used to handle the "Load program" command.
-     *
-     * @param event the triggering event.
-     */
-    @FXML
-    private void onLoadProgramCommand(Event event) {
-        File selectedFile = getTxtFileChooser("Load Program File")
-                .showOpenDialog(((Node) event.getSource()).getScene().getWindow());
-        if (selectedFile != null) {
-            try {
-                controller.openProgram(selectedFile);
-                showNewSimulationSetting();
-                refreshProgramCode();
-            } catch (IOException e) {
-                showErrorAlert(e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Resets the shown program source code.
-     */
-    private void refreshProgramCode() {
-        programTextArea.clear();
-        programTextArea.appendText(controller.getCurrentSourceCode());
-    }
-
-    /**
      * Creates a {@link FileChooser} with the given title to choose a txt file.
      *
      * @param title the title of the file chooser.
@@ -229,6 +208,14 @@ public class FollowMeAppController {
                 new FileChooser.ExtensionFilter("Txt Files", "*.txt"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         return fileChooser;
+    }
+
+    /**
+     * This method is invoked whenever the current simulation execution is reset due to the change of
+     * one of its core settings.
+     */
+    private void showNewSimulationSetting() {
+        setStopWatch(0);
     }
 
     /**
@@ -253,7 +240,6 @@ public class FollowMeAppController {
                 .forEach(e -> e.getValue().forEach(
                         pos -> showArea(e.getKey(), pos)
                 ));
-        clipPane(environmentPane);
     }
 
     /**
@@ -351,19 +337,6 @@ public class FollowMeAppController {
     }
 
     /**
-     * This method is used to clip all child nodes of an AnchorPane that go beyond its boundaries.
-     * The child nodes must already be added to the pane before the invocation in order to be clipped.
-     *
-     * @param pane the anchor pane to be clipped.
-     */
-    private void clipPane(AnchorPane pane) {
-        Rectangle clipRect = new Rectangle();
-        clipRect.widthProperty().bind(pane.widthProperty());
-        clipRect.heightProperty().bind(pane.heightProperty());
-        pane.setClip(clipRect);
-    }
-
-    /**
      * Returns the visual units measure of a value according to the current axes scaling.
      *
      * @param val the value to be scaled.
@@ -374,89 +347,6 @@ public class FollowMeAppController {
     }
 
     /**
-     * This is the method invoked when the view is moved on the left.
-     *
-     * @param event the triggering event.
-     */
-    @FXML
-    private void onMoveViewLeftCommand(Event event) {
-        moveView(new SurfaceDirection(-1, 0));
-    }
-
-    /**
-     * This is the method invoked when the view is moved up.
-     *
-     * @param event the triggering event.
-     */
-    @FXML
-    private void onMoveViewUpCommand(Event event) {
-        moveView(new SurfaceDirection(0, 1));
-    }
-
-    /**
-     * This is the method invoked when the view is moved down.
-     *
-     * @param event the triggering event.
-     */
-    @FXML
-    private void onMoveViewDownCommand(Event event) {
-        moveView(new SurfaceDirection(0, -1));
-    }
-
-    /**
-     * This is the method invoked when the view is moved on the right.
-     *
-     * @param event the triggering event.
-     */
-    @FXML
-    private void onMoveViewRightCommand(Event event) {
-        moveView(new SurfaceDirection(1, 0));
-    }
-
-    /**
-     * This is the method invoked when the zoom slider is manipulated.
-     *
-     * @param event the triggering event.
-     */
-    @FXML
-    private void onZoomViewCommand(Event event) {
-        double sizeDiff = zoomViewSlider.getValue()-getCurrentAxesSize();
-        if (sizeDiff != 0) {
-            xAxis.setLowerBound(xAxis.getLowerBound()-sizeDiff);
-            xAxis.setUpperBound(xAxis.getUpperBound()+sizeDiff);
-            yAxis.setLowerBound(yAxis.getLowerBound()-(sizeDiff/2));
-            yAxis.setUpperBound(yAxis.getUpperBound()+(sizeDiff/2));
-            drawEnvironment();
-            drawRobots();
-        }
-    }
-
-    /**
-     * This method is used to scroll the view in the given direction.
-     *
-     * @param direction the direction of the movement.
-     */
-    private void moveView(SurfaceDirection direction) {
-        moveAxes(direction);
-        drawEnvironment();
-        drawRobots();
-    }
-
-    /**
-     * This method is used to shift the axes in the given direction according to the <code> moveViewFactor</code>
-     * specified for this controller.
-     *
-     * @param direction the direction of the movement.
-     */
-    private void moveAxes(SurfaceDirection direction) {
-        double axesSize = getCurrentAxesSize();
-        xAxis.setLowerBound(xAxis.getLowerBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getX());
-        xAxis.setUpperBound(xAxis.getUpperBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getX());
-        yAxis.setLowerBound(yAxis.getLowerBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getY());
-        yAxis.setUpperBound(yAxis.getUpperBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getY());
-    }
-
-    /**
      * Returns the current height of the y-axis, that represents the current size of both axes.
      * (x-axis is always double-sized compared to y-axis)
      *
@@ -464,6 +354,34 @@ public class FollowMeAppController {
      */
     private double getCurrentAxesSize() {
         return yAxis.getUpperBound() - yAxis.getLowerBound();
+    }
+
+    /**
+     * Method used to handle the "Load program" command.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onLoadProgramCommand(Event event) {
+        File selectedFile = getTxtFileChooser("Load Program File")
+                .showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                controller.openProgram(selectedFile);
+                showNewSimulationSetting();
+                refreshProgramCode();
+            } catch (IOException e) {
+                showErrorAlert(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Resets the shown program source code.
+     */
+    private void refreshProgramCode() {
+        programTextArea.clear();
+        programTextArea.appendText(controller.getCurrentSourceCode());
     }
 
     /**
@@ -516,7 +434,6 @@ public class FollowMeAppController {
                             e.getValue().getY() + robotRadius));
                     shownRobotsMap.put(e.getKey(), robotBox);
                 });
-        clipPane(robotsPane);
     }
 
     /**
@@ -632,7 +549,7 @@ public class FollowMeAppController {
     }
 
     /**
-     * Runs the simulation for the given seconds, showing a real-time animation of the robots' movement and makeing
+     * Runs the simulation for the given seconds, showing a real-time animation of the robots' movement and making
      * the stopwatch timer flow.
      * For each step of the simulation, a different animation is run and possible changes to the set of conditions
      * signaled by each robot are showed at the end of each animation.
@@ -727,5 +644,88 @@ public class FollowMeAppController {
     private void attachStopWatchToAnimation(Animation animation) {
         animation.currentTimeProperty().addListener((obs, oldValue, newValue) ->
                 setStopWatch(currentStopWatchMillis + (int)(newValue.toMillis() - oldValue.toMillis())));
+    }
+
+    /**
+     * This is the method invoked when the view is moved on the left.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onMoveViewLeftCommand(Event event) {
+        moveView(new SurfaceDirection(-1, 0));
+    }
+
+    /**
+     * This is the method invoked when the view is moved up.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onMoveViewUpCommand(Event event) {
+        moveView(new SurfaceDirection(0, 1));
+    }
+
+    /**
+     * This is the method invoked when the view is moved down.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onMoveViewDownCommand(Event event) {
+        moveView(new SurfaceDirection(0, -1));
+    }
+
+    /**
+     * This is the method invoked when the view is moved on the right.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onMoveViewRightCommand(Event event) {
+        moveView(new SurfaceDirection(1, 0));
+    }
+
+    /**
+     * This method is used to scroll the view in the given direction.
+     *
+     * @param direction the direction of the movement.
+     */
+    private void moveView(SurfaceDirection direction) {
+        moveAxes(direction);
+        drawEnvironment();
+        drawRobots();
+    }
+
+    /**
+     * This method is used to shift the axes in the given direction according to the <code> moveViewFactor</code>
+     * specified for this controller.
+     *
+     * @param direction the direction of the movement.
+     */
+    private void moveAxes(SurfaceDirection direction) {
+        double axesSize = getCurrentAxesSize();
+        xAxis.setLowerBound(xAxis.getLowerBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getX());
+        xAxis.setUpperBound(xAxis.getUpperBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getX());
+        yAxis.setLowerBound(yAxis.getLowerBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getY());
+        yAxis.setUpperBound(yAxis.getUpperBound() + axesSize*moveViewFactor*direction.getNormalizedPosition().getY());
+    }
+
+    /**
+     * This is the method invoked when the zoom slider is manipulated.
+     *
+     * @param event the triggering event.
+     */
+    @FXML
+    private void onZoomViewCommand(Event event) {
+        double sizeDiff = zoomViewSlider.getValue()-getCurrentAxesSize();
+        if (sizeDiff != 0) {
+            xAxis.setLowerBound(xAxis.getLowerBound()-sizeDiff);
+            xAxis.setUpperBound(xAxis.getUpperBound()+sizeDiff);
+            yAxis.setLowerBound(yAxis.getLowerBound()-(sizeDiff/2));
+            yAxis.setUpperBound(yAxis.getUpperBound()+(sizeDiff/2));
+            drawEnvironment();
+            drawRobots();
+        }
     }
 }

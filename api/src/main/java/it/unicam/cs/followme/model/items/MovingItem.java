@@ -4,10 +4,11 @@ package it.unicam.cs.followme.model.items;
  * Classes implementing this interface are moving objects that can predict their future position based
  * on their own current movement configuration.
  *
- * @param <P> type representing the position
+ * @param <P> type representing the position.
  */
 
 public interface MovingItem<P> {
+
     /**
      * Returns the predicted new position of the item given a starting position and an amount of time to do
      * the motion.

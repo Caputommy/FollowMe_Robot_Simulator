@@ -10,7 +10,7 @@ import it.unicam.cs.followme.util.DoubleRange;
 public class SurfaceDirection implements Direction<SurfacePosition>{
 
     /**
-     * End point of the vector, such that has an Ecuclidean norm equal to one.
+     * End point of the vector, such that has a Euclidean norm equal to one.
      */
     private final SurfacePosition normalizedPosition;
 
@@ -19,9 +19,9 @@ public class SurfaceDirection implements Direction<SurfacePosition>{
      * position <code>start</code>, that is the direction going from the <code>start</code> to
      * the <code>end</code> position.
      *
-     * @param start the first position
-     * @param end the second position
-     * @throws IllegalArgumentException if one of the given position is null or the two positions coincide
+     * @param start the first position.
+     * @param end the second position.
+     * @throws IllegalArgumentException if one of the given position is null or the two positions coincide.
      */
     public SurfaceDirection (SurfacePosition start, SurfacePosition end) {
         this(end.combineCoordinates(((x1, x2) -> x1 - x2), start));
@@ -31,9 +31,9 @@ public class SurfaceDirection implements Direction<SurfacePosition>{
      * Constructs a direction based on the given coordinates representing an absolute position,
      * that is the direction obtained from the origin to the given point.
      *
-     * @param x the x coordinate of the absolute position
-     * @param y the y coordinate of the absolute position
-     * @throws IllegalArgumentException if the argument is null or is the origin position
+     * @param x the x coordinate of the absolute position.
+     * @param y the y coordinate of the absolute position.
+     * @throws IllegalArgumentException if the argument is null or is the origin position.
      */
     public SurfaceDirection (double x, double y) {
         this(new SurfacePosition(x, y));
@@ -43,12 +43,12 @@ public class SurfaceDirection implements Direction<SurfacePosition>{
      * Constructs a direction based on the given absolute position, that is the
      * direction obtained from the origin to the given point.
      *
-     * @param end the absolute position
-     * @throws IllegalArgumentException if the argument is null or is the origin position
+     * @param end the absolute position.
+     * @throws IllegalArgumentException if the argument is null or is the origin position.
      */
     public SurfaceDirection (SurfacePosition end) throws IllegalArgumentException {
         if (end == null || end.equals(SurfacePosition.ORIGIN))
-            throw new IllegalArgumentException("Cannot construct a direction from a null position");
+            throw new IllegalArgumentException("Cannot construct a direction from a null or origin position");
         this.normalizedPosition = normalizePosition(end);
     }
 
@@ -83,6 +83,12 @@ public class SurfaceDirection implements Direction<SurfacePosition>{
         return position.mapCoordinates(x -> x/position.getDistanceFrom());
     }
 
+    /**
+     * Returns the normalized position corresponding to this surface direction, as the end point
+     * of the magnitude one vector associated with this direction.
+     *
+     * @return the normalized position of this direction.
+     */
     public SurfacePosition getNormalizedPosition() {
         return this.normalizedPosition;
     }

@@ -103,6 +103,7 @@ public class FollowMeProgramBuilderTest {
                 (ProgramCondition<Robot<SurfacePosition, FollowMeLabel>>) currentLine;
         assertFalse(condition.getCondition().test(robot));
         assertTrue(condition.getNextIfFalse().isPresent());
+        assertFalse(condition.getNextIfTrue().isPresent());
     }
     @Test
     public void shouldBuildMove() {

@@ -10,15 +10,15 @@ import org.apache.commons.lang3.tuple.Pair;
 
 @FunctionalInterface
 public interface FollowMeAreaConstructor {
-    public Pair<SurfaceArea<FollowMeLabel>, SurfacePosition> constructArea(ShapeData data);
+    Pair<SurfaceArea<FollowMeLabel>, SurfacePosition> constructArea(ShapeData data);
 
     FollowMeAreaConstructor DEFAULT_CONSTRUCTOR = (data) -> {
         try {
             SurfacePosition position = new SurfacePosition(data.args()[0], data.args()[1]);
             SurfaceArea<FollowMeLabel> area = switch (data.shape()) {
-                case "CIRCLE" -> new SurfaceCircleArea<>(new FollowMeLabel(data.label()), data.args()[2]);
+                case "CIRCLE"    -> new SurfaceCircleArea<>(new FollowMeLabel(data.label()), data.args()[2]);
                 case "RECTANGLE" -> new SurfaceRectangleArea<>(new FollowMeLabel(data.label()), data.args()[2], data.args()[3]);
-                default -> throw new IllegalArgumentException();
+                default          -> throw new IllegalArgumentException();
             };
             return new ImmutablePair<>(area, position);
         } catch (Exception e) {

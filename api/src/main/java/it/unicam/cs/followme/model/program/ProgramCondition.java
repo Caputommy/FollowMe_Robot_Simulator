@@ -18,9 +18,13 @@ public final class ProgramCondition<I> implements ProgramLine<I> {
     private Optional<ProgramLine<I>> nextIfFalse;
 
     public ProgramCondition (Predicate<I> condition) {
+        this(condition, Optional.empty(), Optional.empty());
+    }
+
+    public ProgramCondition (Predicate<I> condition, Optional<ProgramLine<I>> nextIfTrue, Optional<ProgramLine<I>> nextIfFalse) {
         this.condition = condition;
-        this.nextIfTrue = Optional.empty();
-        this.nextIfFalse = Optional.empty();
+        this.nextIfTrue = nextIfTrue;
+        this.nextIfFalse = nextIfFalse;
     }
 
     public Predicate<I> getCondition() {

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class is used to execute a simulation of programmed, moving and signaling items in a given environment.
+ * This class is used to execute a simulation of programmed, moving and signaling items in a specific environment.
  *
  * @param <P> type representing the positions of the space.
  * @param <L> type representing the labels.
@@ -60,6 +60,13 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
         loadProgramOnItems();
     }
 
+    private void loadProgramOnItems() {
+        this.programExecutions = new ArrayList<>();
+        this.tracker.getItems()
+                .stream()
+                .forEach(r -> this.programExecutions.add(new ProgramExecution<>(program, r)));
+    }
+
     /**
      * Returns the current simulation time of this execution (in seconds), where 0 represent the beginning
      * of the simulation.
@@ -93,7 +100,7 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
     }
 
     /**
-     * Adds the given mapped items into the current state simulation in the relative mapped positions.
+     * Adds the given mapped items into the current simulation state in the relative mapped positions.
      * For those new added items, a new execution of the simulation program is applied, starting from
      * the first instruction of the program.
      *
@@ -145,12 +152,5 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
     private void executeOneStepOfProgram() {
         programExecutions.stream()
                 .forEach(exec -> exec.executeOneStep());
-    }
-
-    private void loadProgramOnItems() {
-        this.programExecutions = new ArrayList<>();
-        this.tracker.getItems()
-                .stream()
-                .forEach(r -> this.programExecutions.add(new ProgramExecution<>(program, r)));
     }
 }

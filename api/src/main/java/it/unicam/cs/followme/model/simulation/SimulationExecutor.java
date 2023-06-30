@@ -3,7 +3,7 @@ package it.unicam.cs.followme.model.simulation;
 import java.util.Map;
 
 /**
- * Classes implementing this interface are used to run a simulation of a system that can evolve over time.
+ * Classes implementing this interface are used to run a simulation of a system of items that can evolve over time.
  *
  * @param <P> type representing the positions in the system.
  * @param <I> type representing the items in the system.

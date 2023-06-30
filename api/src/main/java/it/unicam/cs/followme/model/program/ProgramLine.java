@@ -18,5 +18,5 @@ public sealed interface ProgramLine<I> permits ProgramCondition, ProgramInstruct
      *
      * @return the next program line in the program.
      */
-    public Optional<ProgramLine<I>> execute(I item);
+    Optional<ProgramLine<I>> execute(I item);
 }

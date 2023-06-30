@@ -13,7 +13,7 @@ public interface ConditionSignaler<L> {
     /**
      * Returns the set of labels representing the conditions signaled by this signaler.
      *
-     * @return the set of labels
+     * @return the set of condition labels.
      */
     Set<L> getConditions ();
 
@@ -21,7 +21,7 @@ public interface ConditionSignaler<L> {
      * Adds a condition to those that are signaled by this signaler.
      *
      * @param label the label representing the signaled condition.
-     * @return true if the set of signaled conditions of this item changed as result of this call.
+     * @return true if the set of signaled conditions of this item changed as result of the call.
      */
     boolean signal (L label);
 
@@ -29,7 +29,7 @@ public interface ConditionSignaler<L> {
      * Removes a condition to those that are signaled by this signaler.
      *
      * @param label the label representing the signaled condition
-     * @return true if the set of signaled conditions of this item changed as result of this call.
+     * @return true if the set of signaled conditions of this item changed as result of the call.
      */
     boolean unsignal (L label);
 }

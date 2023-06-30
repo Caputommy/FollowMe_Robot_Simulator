@@ -5,12 +5,11 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Classes implementing this interface take track of the position of a set of {@link MovingItem} objects over time.
+ * Classes implementing this interface keep track of the position of a set of {@link MovingItem} objects over time.
  *
  * @param <P> type representing the position of the items.
  * @param <I> type representing the moving items.
  */
-
 public interface MovingItemTracker<P, I extends MovingItem<P>> {
 
     /**
@@ -71,7 +70,7 @@ public interface MovingItemTracker<P, I extends MovingItem<P>> {
      * Returns the current state of the tracker as a map that associates each item tracked to
      * their position.
      *
-     * @return the current stat of this tracker.
+     * @return the current state of this tracker.
      */
     Map<I, P> getMapping ();
 

@@ -8,5 +8,11 @@ package it.unicam.cs.followme.model.environment;
  */
 public interface Position<P> {
 
+    /**
+     * Returns the distance of the given position related to this position.
+     *
+     * @param otherPosition the position to evaluate the distance of.
+     * @return the distance from the given position.
+     */
     double getDistanceFrom (P otherPosition);
 }

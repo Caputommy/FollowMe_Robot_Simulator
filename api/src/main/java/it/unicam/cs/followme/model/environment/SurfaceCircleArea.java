@@ -2,6 +2,12 @@ package it.unicam.cs.followme.model.environment;
 
 import java.util.Objects;
 
+/**
+ * Instances of this class represent a two-dimensional circular labeled area, with a reference
+ * point corresponding to its center.
+ *
+ * @param <L> the type representing the label.
+ */
 public class SurfaceCircleArea<L> extends SurfaceArea<L> {
 
     private final double radius;

@@ -7,18 +7,20 @@ package it.unicam.cs.followme.model.environment;
  * @param <L> type representing the label that identifies the area.
  */
 public interface Area<P, L> {
+
     /**
      * Returns the label associated with this area.
      *
-     * @return the label
+     * @return the associated label.
      */
     public L getLabel();
 
     /**
-     * Verifies if a position relative to the center of this area is included inside it.
+     * Verifies if a given position is included inside this area. The inclusion is evaluated considering
+     * the given position as a position relative to the reference point of this area, such as its center.
      *
-     * @param position the relative position
-     * @return true if it is included
+     * @param position the relative position.
+     * @return true if the given position is included.
      */
     boolean includes(P position);
 

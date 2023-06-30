@@ -35,8 +35,8 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
 
     /**
      * Constructs a program builder that binds the program it produces to the given {@link Environment} and
-     * {@link SignalingMovingItemTracker}. When instructions or condition that act upon a certain environment or
-     * itemTracker are parsed, the given parameters will be used.
+     * {@link SignalingMovingItemTracker}. When instructions or condition that act upon the state of a certain
+     * environment or item tracker are parsed, the given parameters will be used.
      *
      * @param environment the environment to bind the program to.
      * @param itemTracker the itemTracker to bind the program to.
@@ -186,7 +186,7 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
     }
 
     /*
-        Chains the given newProgramLine to the current one following the following logic:
+        Chains the given newProgramLine to the current one according to the following logic:
         - if the currentLine is a condition, checks if the newProgramLine has to be set as its ifTrue or the ifFalse branch.
         - if the currentLine is an instruction, simply sets its next line to the newProgramLine.
      */

@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * An nstance of this class is a particular {@link MovingItemTracker} that takes track of items that can also signal
+ * An instance of this class is a particular {@link MovingItemTracker} that keeps track of items that can also signal
  * conditions (i. e. implement {@link ConditionSignaler}) and, thus, can track the origin of conditions signaled
  * by those items.
  *

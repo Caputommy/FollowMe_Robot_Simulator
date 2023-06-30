@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.testng.Assert.assertThrows;
 import static org.testng.AssertJUnit.*;
 
 public class SimulationLoaderTest {
@@ -208,5 +209,19 @@ public class SimulationLoaderTest {
         Set<FollowMeLabel> expectedLabels = new HashSet<>();
         expectedLabels.add(new FollowMeLabel("LABEL_3_FOUND"));
         assertEquals(expectedLabels, robot.getConditions());
+    }
+
+    @Test
+    public void shouldThrowExceptionEnvironment() {
+        String badEnvironment = "Label_1 CIRCLE -8 1.5";
+        assertThrows(IOException.class, () -> loader.loadEnvironment(badEnvironment));
+    }
+
+    @Test
+    public void shouldThrowExceptionProgram() {
+        String badProgram = "UNTIL LABEL_3\n" +
+                "   MOVE PIPPO -9 9 -9 9 1\n" +
+                "DONE";
+        assertThrows(IOException.class, () -> loader.loadEnvironment(badProgram));
     }
 }

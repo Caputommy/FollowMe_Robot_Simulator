@@ -58,7 +58,7 @@ public class SignalingMovingItemTrackerTest {
     }
 
     @Test
-    public void shouldGetSourcePositions() {
+    public void shouldGetSourcePositionsFromPosition() {
         Set<SurfacePosition> expected = new HashSet<>();
         expected.add(new SurfacePosition(1, -1));
         assertEquals(expected, tracker.getSourcePositions(
@@ -71,7 +71,7 @@ public class SignalingMovingItemTrackerTest {
     }
 
     @Test
-    public void shouldGetSourcePositions2() {
+    public void shouldGetSourcePositionsFromRobot() {
         for (int i=0; i<5; i++) robots.get(i).signal(new FollowMeLabel("Label_X"));
         Set<SurfacePosition> expected = new HashSet<>();
         expected.add(new SurfacePosition(1, -1));

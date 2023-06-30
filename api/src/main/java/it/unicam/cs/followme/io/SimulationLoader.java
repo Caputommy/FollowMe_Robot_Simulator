@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Classes implementing this interface are used to build one or more {@link SimulationExecutor} based on a
+ * Classes implementing this interface are used to build one or more {@link SimulationExecutor} based on an
  * environment and a program, loading their settings from the given data.
  *
  * @param <P> type representing the positions in the simulated system to build.
@@ -106,7 +106,7 @@ public interface SimulationLoader<P, L, I> {
     /**
      * Returns a fresh new {@link SimulationExecutor} based on the latest environment and program loaded.
      * If the environment and/or the program were not successfully loaded into this loader before,
-     * a new executor having empty raw environment and/or empty program is provided.
+     * a new executor having empty environment and/or empty program is provided.
      *
      * @return the executor based on the current state of the loader.
      */
