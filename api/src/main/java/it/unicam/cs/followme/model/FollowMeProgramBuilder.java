@@ -128,10 +128,7 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
                 DoubleRange range = new DoubleRange(-args[0], args[0]);
                 setRandomDirectionFromRelativeRanges(item, range, range);
             }
-            else item.setCurrentDirection(new SurfaceDirection(
-                    SurfacePosition.averageLocation(inRangePositions).get()
-                            .combineCoordinates((x1, x2) -> x1 - x2, itemTracker.getCurrentPosition(item).get()))
-            );
+            else setDirectionFromAbsolutePosition(item, SurfacePosition.averageLocation(inRangePositions).get());
             item.setCurrentVelocity(args[1]);
         });
         setCurrentLine(followInstruction);
@@ -216,5 +213,10 @@ public class FollowMeProgramBuilder<I extends UniformMotionMovingItem<SurfacePos
         item.setCurrentDirection(new SurfaceDirection(
                 SurfacePosition.randomPositionInRanges(rangeX, rangeY))
         );
+    }
+
+    private void setDirectionFromAbsolutePosition (I item, SurfacePosition position) {
+        item.setCurrentDirection(new SurfaceDirection(
+                position.combineCoordinates((x1, x2) -> x1 - x2, itemTracker.getCurrentPosition(item).get())));
     }
 }

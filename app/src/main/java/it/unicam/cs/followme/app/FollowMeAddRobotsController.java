@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * JavaFX Controller of the Add Robots stage of the FollowMeApp.
  */
-public class AddRobotsController {
+public class FollowMeAddRobotsController {
 
     public static final int WIDTH = 600;
     public static final int HEIGHT = 400;
@@ -59,7 +59,7 @@ public class AddRobotsController {
     private Button cancelButton;
 
 
-    public AddRobotsController (Controller<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> controller, NumberAxis xAxis, NumberAxis yAxis) {
+    public FollowMeAddRobotsController(Controller<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> controller, NumberAxis xAxis, NumberAxis yAxis) {
         this.controller = controller;
         this.xAxis = xAxis;
         this.yAxis = yAxis;
@@ -79,11 +79,13 @@ public class AddRobotsController {
     private void onAddPositionRowCommand(Event event) {
         positionsTableList.add(new ArrayList<>());
         int rowIndex = positionsTableList.size();
-        positionsTableList.get(rowIndex-1).add(getCoordinateSpinner(getAxisMidValue(xAxis)));
-        positionsTableList.get(rowIndex-1).add(getCoordinateSpinner(getAxisMidValue(yAxis)));
-        positionsTableList.get(rowIndex-1).add(getCoordinateSpinner(1));
-        positionsTableList.get(rowIndex-1).add(getCoordinateSpinner(0));
-        positionsTableList.get(rowIndex-1).add(getVelocitySpinner());
+        positionsTableList.get(rowIndex-1).addAll(List.of(
+                getCoordinateSpinner(getAxisMidValue(xAxis)),
+                getCoordinateSpinner(getAxisMidValue(yAxis)),
+                getCoordinateSpinner(1),
+                getCoordinateSpinner(0),
+                getVelocitySpinner()
+        ));
 
         for (int i = 0; i< positionsTableList.get(rowIndex-1).size(); i++) {
             positionsTable.add(positionsTableList.get(rowIndex-1).get(i), i, rowIndex);
@@ -100,13 +102,15 @@ public class AddRobotsController {
         rangesTableList.add(new ArrayList<>());
         int rowIndex = rangesTableList.size();
         robotNumberList.add(getNaturalNumberSpinner());
-        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(xAxis.getLowerBound()));
-        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(xAxis.getUpperBound()));
-        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(yAxis.getLowerBound()));
-        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(yAxis.getUpperBound()));
-        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(1));
-        rangesTableList.get(rowIndex-1).add(getCoordinateSpinner(0));
-        rangesTableList.get(rowIndex-1).add(getVelocitySpinner());
+        rangesTableList.get(rowIndex-1).addAll(List.of(
+                getCoordinateSpinner(xAxis.getLowerBound()),
+                getCoordinateSpinner(xAxis.getUpperBound()),
+                getCoordinateSpinner(yAxis.getLowerBound()),
+                getCoordinateSpinner(yAxis.getUpperBound()),
+                getCoordinateSpinner(1),
+                getCoordinateSpinner(0),
+                getVelocitySpinner()
+        ));
 
         rangesTable.add(robotNumberList.get(rowIndex-1), 0, rowIndex);
         for (int i=0; i<rangesTableList.get(rowIndex-1).size(); i++) {
@@ -182,25 +186,30 @@ public class AddRobotsController {
     }
 
     /**
-     * This method is used to place new robots int the simulation through the controller
+     * This method is used to place new robots into the simulation through the controller
      * from data in the <code>positionsTable</code>.
      */
     private void placeRobotsFromPositions() {
         Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> robotMap = new HashMap<>();
         this.positionsTableList
                 .stream()
-                .forEach(list -> robotMap.put(
-                        new Robot<>(
-                                new SurfaceDirection(list.get(2).getValue(), list.get(3).getValue()),
-                                list.get(4).getValue()),
-                        new SurfacePosition(list.get(0).getValue(), list.get(1).getValue()))
-        );
+                .forEach(list -> putRobotFromPositionList(robotMap, list));
 
         this.controller.placeItems(robotMap);
     }
 
+    private void putRobotFromPositionList(Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> map, List<Spinner<Double>> list) {
+        map.put(
+                new Robot<>(
+                        new SurfaceDirection(list.get(2).getValue(), list.get(3).getValue()),
+                        list.get(4).getValue()),
+                new SurfacePosition(list.get(0).getValue(), list.get(1).getValue())
+        );
+    }
+
+
     /**
-     * This method is used to place new robots int the simulation through the controller
+     * This method is used to place new robots into the simulation through the controller
      * from data in the <code>rangesTable</code>.
      */
     private void placeRobotsFromRanges() {
@@ -208,19 +217,21 @@ public class AddRobotsController {
         this.rangesTableList
                 .stream()
                 .forEach(list -> {
-                            for(int i=0; i<robotNumberList.get(rangesTableList.indexOf(list)).getValue(); i++) {
-                                robotMap.put(
-                                        new Robot<>(
-                                                new SurfaceDirection(list.get(4).getValue(), list.get(5).getValue()),
-                                                list.get(6).getValue()),
-                                        SurfacePosition.randomPositionInRanges(
-                                                new DoubleRange(list.get(0).getValue(), list.get(1).getValue()),
-                                                new DoubleRange(list.get(2).getValue(), list.get(3).getValue())
-                                        ));
-                            }
+                        for(int i=0; i<robotNumberList.get(rangesTableList.indexOf(list)).getValue(); i++) {
+                            putRobotFromRangeList(robotMap, list);
                         }
-                );
-
+                    });
         this.controller.placeItems(robotMap);
+    }
+
+    private void putRobotFromRangeList(Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> map, List<Spinner<Double>> list) {
+        map.put(
+            new Robot<>(
+                    new SurfaceDirection(list.get(4).getValue(), list.get(5).getValue()),
+                    list.get(6).getValue()),
+            SurfacePosition.randomPositionInRanges(
+                    new DoubleRange(list.get(0).getValue(), list.get(1).getValue()),
+                    new DoubleRange(list.get(2).getValue(), list.get(3).getValue()))
+        );
     }
 }

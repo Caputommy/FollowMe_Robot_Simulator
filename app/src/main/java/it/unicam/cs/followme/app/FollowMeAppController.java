@@ -182,7 +182,7 @@ public class FollowMeAppController {
      */
     @FXML
     private void onLoadEnvironmentCommand(Event event) {
-        File selectedFile = getTxtFileChooser("Load Environment File")
+        File selectedFile = getTxtFileChooser("Load Environment File", "/src/test/samples/environmentSamples")
                 .showOpenDialog(((Node) event.getSource()).getScene().getWindow());
         if (selectedFile != null) {
             try {
@@ -196,14 +196,17 @@ public class FollowMeAppController {
     }
 
     /**
-     * Creates a {@link FileChooser} with the given title to choose a txt file.
+     * Creates a {@link FileChooser} with the given title to choose a txt file from the given local path
+     * in the user working directory (app directory).
      *
      * @param title the title of the file chooser.
+     * @param initialPath the initial directory local path.
      * @return the txt file chooser.
      */
-    private FileChooser getTxtFileChooser(String title) {
+    private FileChooser getTxtFileChooser(String title, String initialPath) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir") + initialPath));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Txt Files", "*.txt"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
@@ -363,7 +366,7 @@ public class FollowMeAppController {
      */
     @FXML
     private void onLoadProgramCommand(Event event) {
-        File selectedFile = getTxtFileChooser("Load Program File")
+        File selectedFile = getTxtFileChooser("Load Program File", "/src/test/samples/programSamples")
                 .showOpenDialog(((Node) event.getSource()).getScene().getWindow());
         if (selectedFile != null) {
             try {
@@ -407,8 +410,8 @@ public class FollowMeAppController {
      */
     private Stage getAddRobotStage() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add_robots_scene.fxml"));
-        loader.setController(new AddRobotsController(controller, xAxis, yAxis));
-        Scene addRobotScene = new Scene(loader.load(), AddRobotsController.WIDTH, AddRobotsController.HEIGHT);
+        loader.setController(new FollowMeAddRobotsController(controller, xAxis, yAxis));
+        Scene addRobotScene = new Scene(loader.load(), FollowMeAddRobotsController.WIDTH, FollowMeAddRobotsController.HEIGHT);
         Stage addRobotStage = new Stage();
         addRobotStage.setTitle("Add Robots");
         addRobotStage.getIcons().add(new Image("/icons/AddRobotIcon.png"));
@@ -449,12 +452,7 @@ public class FollowMeAppController {
             robotBox.getChildren().add(getMegaphoneImageView());
             robotBox.getChildren().addAll(robot.getConditions()
                     .stream()
-                    .map(c -> {
-                        Label conditionLabel = new Label(c.label());
-                        conditionLabel.setMaxHeight(robotCircle.getRadius());
-                        conditionLabel.setStyle(robotLabelStyle);
-                        return conditionLabel;
-                    })
+                    .map(this::getConditionLabel)
                     .toList());
         }
         return robotBox;
@@ -470,6 +468,19 @@ public class FollowMeAppController {
         robotCircle.setStroke(new Color(0.0, 0.0, 0.0, 1.0));
         robotCircle.setStrokeWidth(1);
         return robotCircle;
+    }
+
+    /**
+     * Returns a new {@link Label} for the visual representation of the given robot condition.
+     *
+     * @param condition the robot condition.
+     * @return a label representing the condition.
+     */
+    private Label getConditionLabel (FollowMeLabel condition) {
+        Label conditionLabel = new Label(condition.label());
+        conditionLabel.setMaxHeight(scale(robotRadius));
+        conditionLabel.setStyle(robotLabelStyle);
+        return conditionLabel;
     }
 
     /**
@@ -566,7 +577,6 @@ public class FollowMeAppController {
             animation.setOnFinished(event -> {
                 drawRobots();
                 setStopWatch((int)(controller.getSimulationCurrentTime()*1000));
-                System.out.println(seconds - secondsToRun);
                 runWithAnimation(seconds - secondsToRun);
             });
             animation.play();

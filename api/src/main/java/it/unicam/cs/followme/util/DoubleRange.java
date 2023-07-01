@@ -3,9 +3,10 @@ package it.unicam.cs.followme.util;
 import java.util.Random;
 
 /**
- * Representation of a numeric real range
- * @param start lower inclusive bound of the range
- * @param end upper inclusive bound of the range
+ * Representation of a numeric real range.
+ *
+ * @param start lower inclusive bound of the range.
+ * @param end upper inclusive bound of the range.
  */
 public record DoubleRange(double start, double end){
 

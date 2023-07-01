@@ -22,10 +22,7 @@ public interface FollowMeAreaConstructor {
             };
             return new ImmutablePair<>(area, position);
         } catch (Exception e) {
-            return new ImmutablePair<>
-                    (new SurfaceCircleArea<>(new FollowMeLabel(data.label()), 0), SurfacePosition.ORIGIN);
+            return new ImmutablePair<>(new SurfaceCircleArea<>(new FollowMeLabel(data.label()), 0), SurfacePosition.ORIGIN);
         }
-
-
     };
 }
