@@ -1,6 +1,7 @@
 package it.unicam.cs.followme.io;
 
 import it.unicam.cs.followme.model.FollowMeAreaConstructor;
+import it.unicam.cs.followme.model.FollowMeDefaultCommandEvaluator;
 import it.unicam.cs.followme.model.FollowMeLabel;
 import it.unicam.cs.followme.model.FollowMeProgramBuilder;
 import it.unicam.cs.followme.model.environment.Environment;
@@ -39,7 +40,7 @@ public final class FollowMeSimulationLoader implements SimulationLoader<SurfaceP
         this.tracker = new MapSignalingMovingItemTracker<>();
         this.program = new ProgramCondition<>((r) -> false);
         this.programSourceCode = "";
-        this.programBuilder = new FollowMeProgramBuilder<>(environment, tracker);
+        this.programBuilder = new FollowMeProgramBuilder<>(new FollowMeDefaultCommandEvaluator<>(environment, tracker));
         this.parser = new FollowMeParser(programBuilder);
         this.instructionPaceTime = SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME;
     }
@@ -79,7 +80,7 @@ public final class FollowMeSimulationLoader implements SimulationLoader<SurfaceP
 
     //Uses the given program source code to build a program on the current environment (and tracker).
     private ProgramLine<Robot<SurfacePosition, FollowMeLabel>> buildProgram(String program) throws FollowMeParserException {
-        this.programBuilder = new FollowMeProgramBuilder<>(environment, tracker);
+        this.programBuilder = new FollowMeProgramBuilder<>(new FollowMeDefaultCommandEvaluator<>(environment, tracker));
         this.parser = new FollowMeParser(programBuilder);
         this.parser.parseRobotProgram(program);
         return programBuilder.getProgramHeadLine();

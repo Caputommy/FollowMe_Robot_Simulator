@@ -31,7 +31,7 @@ public class FollowMeProgramBuilderTest {
 
     private void buildProgram1() {
         FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
-                new FollowMeProgramBuilder<>(environment, tracker);
+                new FollowMeProgramBuilder<>(new FollowMeDefaultCommandEvaluator<>(environment, tracker));
         builder.parsingStarted();
         builder.moveCommand(new double[]{0, 1, 1.5});
         builder.doForeverStart();
@@ -48,7 +48,7 @@ public class FollowMeProgramBuilderTest {
         tracker.addItem(robot2, new SurfacePosition(-4,0));
         tracker.addItem(robot, new SurfacePosition(3,0));
         FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
-                new FollowMeProgramBuilder<>(environment, tracker);
+                new FollowMeProgramBuilder<>(new FollowMeDefaultCommandEvaluator<>(environment, tracker));
         builder.parsingStarted();
         builder.followCommand("label_1", new double[]{10, 2});
         builder.stopCommand();
@@ -58,7 +58,7 @@ public class FollowMeProgramBuilderTest {
 
     private void buildProgram3() {
         FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
-                new FollowMeProgramBuilder<>(environment, tracker);
+                new FollowMeProgramBuilder<>(new FollowMeDefaultCommandEvaluator<>(environment, tracker));
         builder.parsingStarted();
         builder.moveCommand(new double[]{0, 1, 1.5});
         builder.continueCommand(10);
@@ -69,7 +69,7 @@ public class FollowMeProgramBuilderTest {
 
     private void buildProgram4() {
         FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
-                new FollowMeProgramBuilder<>(environment, tracker);
+                new FollowMeProgramBuilder<>(new FollowMeDefaultCommandEvaluator<>(environment, tracker));
         builder.parsingStarted();
         builder.repeatCommandStart(4);
             builder.signalCommand("Label_1");
@@ -83,7 +83,7 @@ public class FollowMeProgramBuilderTest {
         tracker.addItem(robot, new SurfacePosition(-4,0));
         environment.addArea(new SurfaceCircleArea<>(new FollowMeLabel("Circle_label"), 0.5), new SurfacePosition(2,0));
         FollowMeProgramBuilder<Robot<SurfacePosition, FollowMeLabel>> builder =
-                new FollowMeProgramBuilder<>(environment, tracker);
+                new FollowMeProgramBuilder<>(new FollowMeDefaultCommandEvaluator<>(environment, tracker));
         builder.parsingStarted();
         builder.moveCommand(new double[]{1, 0, 1});
         builder.untilCommandStart("Circle_label");

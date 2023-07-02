@@ -67,9 +67,9 @@ public interface FollowMeParserHandler {
     void stopCommand();
 
     /**
-     * Method invoked when a command "WAIT" is parsed.
+     * Method invoked when a command "CONTINUE" is parsed.
      *
-     * @param s number of seconds;
+     * @param s number of seconds.
      */
     void continueCommand(int s);
 
