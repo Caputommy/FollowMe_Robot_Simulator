@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class Controller<P extends Position<P>, L, I extends MovingItem<P> & ConditionSignaler<L>>{
 
-    private final SimulationLoader<P, L, I> builder;
+    private final SimulationLoader<P, L, I> loader;
     private SimulationExecutor<P, I> executor;
     private Map<Area<P, L>, Set<P>> currentEnvironmentMap;
     private String currentSourceCode;
@@ -35,11 +35,11 @@ public class Controller<P extends Position<P>, L, I extends MovingItem<P> & Cond
      * Creates a new controller based on the given {@link SimulationLoader}, used to build an executable simulation
      * from source files.
      *
-     * @param builder the simulation loader.
+     * @param loader the simulation loader.
      */
-    public Controller(SimulationLoader<P, L, I> builder) {
-        this.builder = builder;
-        this.executor = builder.getExecutor();
+    public Controller(SimulationLoader<P, L, I> loader) {
+        this.loader = loader;
+        this.executor = loader.getExecutor();
         this.currentEnvironmentMap = new HashMap<>();
         this.currentSourceCode = "";
     }
@@ -53,7 +53,7 @@ public class Controller<P extends Position<P>, L, I extends MovingItem<P> & Cond
      * @throws IOException if an I/O error occurs from the file or if an error occurred during the parsing.
      */
     public void openEnvironment(File file) throws IOException {
-        this.currentEnvironmentMap = builder.loadEnvironment(file).getMapping();
+        this.currentEnvironmentMap = loader.loadEnvironment(file).getMapping();
         buildExecutor();
     }
 
@@ -66,7 +66,7 @@ public class Controller<P extends Position<P>, L, I extends MovingItem<P> & Cond
      * @throws IOException if an I/O error occurs from the file or if an error occurred during the parsing.
      */
     public void openProgram(File file) throws IOException {
-        builder.loadProgram(file);
+        loader.loadProgram(file);
         this.currentSourceCode = Files.readString(file.toPath());
         buildExecutor();
     }
@@ -78,7 +78,7 @@ public class Controller<P extends Position<P>, L, I extends MovingItem<P> & Cond
      * @param s the instruction pace time to set.
      */
     public void setInstructionPace(double s) {
-        builder.setInstructionPaceTime(s);
+        loader.setInstructionPaceTime(s);
         buildExecutor();
     }
 
@@ -147,7 +147,7 @@ public class Controller<P extends Position<P>, L, I extends MovingItem<P> & Cond
     }
 
     private void buildExecutor() {
-        this.executor = builder.getExecutor();
+        this.executor = loader.getExecutor();
     }
 
 }
