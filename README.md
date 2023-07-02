@@ -5,7 +5,7 @@ developed as a project for the Programming Methodologies exam at [UNICAM](http:/
 
 This application can run a simulation based on: 
 - An environment, made of two-dimensional labeled areas, 
-- A program made of instruction followed by all robots in the simulation.
+- A program made of instructions followed by all robots in the simulation.
 
 ## Building and running
 
