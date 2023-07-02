@@ -63,7 +63,7 @@
             </Pane>
          </content>
       </ScrollPane>
-      <Label prefHeight="22.0" prefWidth="600.0" style="-fx-background-color: #E0FFFF; -fx-border-color: #AAA;" text="Robots to be added in random positions withing range">
+      <Label prefHeight="22.0" prefWidth="600.0" style="-fx-background-color: #E0FFFF; -fx-border-color: #AAA;" text="Robots to be added in random positions within ranges">
          <padding>
             <Insets left="5.0" />
          </padding>
