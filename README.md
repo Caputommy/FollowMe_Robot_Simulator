@@ -4,7 +4,7 @@ This is a simple 2D simulation environment for programmable moving robots,
 developed as a project for the Programming Methodologies exam at [UNICAM](http://www.unicam.it/).
 
 This application can run a simulation based on: 
-- An environment, made of two-dimensional labeled areas, 
+- An environment, made of two-dimensional labeled areas; 
 - A program made of instructions followed by all robots in the simulation.
 
 ## Building and running

@@ -143,8 +143,8 @@ public class FollowMeAppController {
 
     private void initPaceTimeSpinner() {
         paceTimeSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(
-                0.1, Double.MAX_VALUE,
-                SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME, 0.1));
+                0.5, Double.MAX_VALUE,
+                SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME, 0.5));
         paceTimeSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
                 controller.setInstructionPace(newValue);
                 showNewSimulationSetting();
