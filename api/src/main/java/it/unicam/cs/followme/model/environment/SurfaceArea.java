@@ -1,8 +1,5 @@
 package it.unicam.cs.followme.model.environment;
 
-import it.unicam.cs.followme.model.environment.Area;
-import it.unicam.cs.followme.model.environment.SurfacePosition;
-
 public abstract class SurfaceArea<L> implements Area<SurfacePosition, L> {
     private final L label;
 

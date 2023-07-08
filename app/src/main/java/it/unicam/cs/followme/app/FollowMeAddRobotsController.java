@@ -10,7 +10,6 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -45,18 +44,6 @@ public class FollowMeAddRobotsController {
 
     @FXML
     private GridPane rangesTable;
-
-    @FXML
-    private Button addPositionRowButton;
-
-    @FXML
-    private Button addRangeRowButton;
-
-    @FXML
-    private Button addRobotsButton;
-
-    @FXML
-    private Button cancelButton;
 
 
     public FollowMeAddRobotsController(Controller<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> controller, NumberAxis xAxis, NumberAxis yAxis) {

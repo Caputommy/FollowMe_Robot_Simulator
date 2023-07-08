@@ -42,7 +42,7 @@ public final class ProgramInstruction<I> implements ProgramLine<I> {
 
     @Override
     public Optional<ProgramLine<I>> execute(I item) {
-        this.instruction.accept(item);
-        return this.next;
+        getInstruction().accept(item);
+        return getNext();
     }
 }

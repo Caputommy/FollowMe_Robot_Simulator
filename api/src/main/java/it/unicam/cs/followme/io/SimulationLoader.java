@@ -41,7 +41,7 @@ public interface SimulationLoader<P, L, I> {
      * */
     default Environment<P, L> loadEnvironment(Path path) throws IOException {
         return loadEnvironment(Files.readString(path));
-    };
+    }
 
     /**
      * Loads the environment described by the given file into this loader.
@@ -54,7 +54,7 @@ public interface SimulationLoader<P, L, I> {
      * */
     default Environment<P, L> loadEnvironment(File file) throws IOException {
         return loadEnvironment(file.toPath());
-    };
+    }
 
     /**
      * Loads the program described by the given string into this loader.
@@ -78,7 +78,7 @@ public interface SimulationLoader<P, L, I> {
      * */
     default ProgramLine<I> loadProgram(Path path) throws IOException {
         return loadProgram(Files.readString(path));
-    };
+    }
 
     /**
      * Loads the program described by the given file into this loader.
@@ -91,7 +91,7 @@ public interface SimulationLoader<P, L, I> {
      * */
     default ProgramLine<I> loadProgram(File file) throws IOException {
         return loadProgram(file.toPath());
-    };
+    }
 
     /**
      * Sets the instruction pace time of the simulation in the loader, i.e. the simulation time interval

@@ -1,6 +1,5 @@
 package it.unicam.cs.followme.model.program;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

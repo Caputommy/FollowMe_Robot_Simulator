@@ -13,7 +13,7 @@ public interface Area<P, L> {
      *
      * @return the associated label.
      */
-    public L getLabel();
+    L getLabel();
 
     /**
      * Verifies if a given position is included inside this area. The inclusion is evaluated considering

@@ -22,7 +22,6 @@ import java.util.Map;
 public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I extends MovingItem<P> & ConditionSignaler<L>>
         implements SimulationExecutor<P, I>{
 
-    private final Environment<P, L> environment;
     private final SignalingMovingItemTracker<P, L, I> tracker;
     private final ProgramLine<I> program;
     private final double instructionPaceTime;
@@ -35,24 +34,21 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
      * Creates a new executor from the given information about the initial state of the simulation,
      * where the interval time between the execution of each instruction among the items is 1 (second).
      *
-     * @param environment the area configuration of the environment.
      * @param tracker the initial mapping of the items.
      * @param program the first line of the program to execute on the items.
      */
-    public SignalingItemSimulationExecutor(Environment<P, L> environment, SignalingMovingItemTracker<P, L, I> tracker, ProgramLine<I> program) {
-        this(environment, tracker, program, SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME);
+    public SignalingItemSimulationExecutor(SignalingMovingItemTracker<P, L, I> tracker, ProgramLine<I> program) {
+        this(tracker, program, SignalingItemSimulationExecutor.DEFAULT_INSTRUCTION_PACE_TIME);
     }
 
     /**
      * Creates a new executor from the given information about the initial state of the simulation.
      *
-     * @param environment the area configuration of the environment.
      * @param tracker the initial mapping of the items.
      * @param program the first line of the program to execute on the items.
      * @param executionPaceTime the time interval between each instruction execution of the program.
      */
-    public SignalingItemSimulationExecutor(Environment<P, L> environment, SignalingMovingItemTracker<P, L, I> tracker, ProgramLine<I> program, double executionPaceTime) {
-        this.environment = environment;
+    public SignalingItemSimulationExecutor(SignalingMovingItemTracker<P, L, I> tracker, ProgramLine<I> program, double executionPaceTime) {
         this.tracker = tracker;
         this.program = program;
         this.instructionPaceTime = executionPaceTime;

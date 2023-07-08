@@ -1,20 +1,11 @@
 package it.unicam.cs.followme.model;
 
-import it.unicam.cs.followme.model.environment.Environment;
-import it.unicam.cs.followme.model.environment.SurfacePosition;
-import it.unicam.cs.followme.model.items.ConditionSignaler;
-import it.unicam.cs.followme.model.items.SignalingMovingItemTracker;
-import it.unicam.cs.followme.model.items.SurfaceDirection;
-import it.unicam.cs.followme.model.items.UniformMotionMovingItem;
 import it.unicam.cs.followme.model.program.ProgramCondition;
 import it.unicam.cs.followme.model.program.ProgramInstruction;
 import it.unicam.cs.followme.model.program.ProgramLine;
-import it.unicam.cs.followme.model.program.ProgramVariable;
-import it.unicam.cs.followme.util.DoubleRange;
 import it.unicam.cs.followme.utilities.FollowMeParserHandler;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -66,7 +57,7 @@ public class FollowMeProgramBuilder<I> implements FollowMeParserHandler {
 
     @Override
     public void parsingStarted() {
-        this.headLine = new ProgramCondition<I>((item) -> false);
+        this.headLine = new ProgramCondition<>((item) -> false);
         this.currentLine = this.headLine;
         this.conditionStack = new Stack<>();
         this.parsingDone = false;

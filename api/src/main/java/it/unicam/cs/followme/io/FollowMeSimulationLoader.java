@@ -27,10 +27,10 @@ import java.util.List;
  */
 public final class FollowMeSimulationLoader implements SimulationLoader<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> {
 
+    private final SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> tracker;
     private FollowMeParser parser;
     private FollowMeProgramBuilder<Robot<SurfacePosition,FollowMeLabel>> programBuilder;
     private Environment<SurfacePosition, FollowMeLabel> environment;
-    private SignalingMovingItemTracker<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> tracker;
     private String programSourceCode;
     private ProgramLine<Robot<SurfacePosition, FollowMeLabel>> program;
     private double instructionPaceTime;
@@ -93,6 +93,6 @@ public final class FollowMeSimulationLoader implements SimulationLoader<SurfaceP
 
     @Override
     public SimulationExecutor<SurfacePosition, Robot<SurfacePosition, FollowMeLabel>> getExecutor() {
-        return new SignalingItemSimulationExecutor<>(environment, tracker, program, instructionPaceTime);
+        return new SignalingItemSimulationExecutor<>(tracker, program, instructionPaceTime);
     }
 }

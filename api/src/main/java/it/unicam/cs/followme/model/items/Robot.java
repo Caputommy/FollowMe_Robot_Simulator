@@ -10,7 +10,7 @@ import java.util.*;
  * @param <L> type representing the labels of the conditions.
  */
 public class Robot<P, L> extends UniformMotionMovingItem<P> implements ConditionSignaler<L> {
-    private Set<L> signaledConditions;
+    private final Set<L> signaledConditions;
 
     public Robot(Direction<P> direction) {
         super(direction);

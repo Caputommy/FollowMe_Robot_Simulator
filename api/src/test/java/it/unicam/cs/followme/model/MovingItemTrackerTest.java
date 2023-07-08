@@ -70,7 +70,7 @@ public class MovingItemTrackerTest {
 
         Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> mapping = tracker.getMapping();
         assertTrue(mapping.containsKey(robots.get(4)));
-        assertTrue(mapping.size() == 3);
+        assertEquals(3, mapping.size());
         assertEquals(new SurfacePosition(5,-3), mapping.get(robots.get(5)));
     }
 
@@ -83,7 +83,7 @@ public class MovingItemTrackerTest {
         Map<Robot<SurfacePosition, FollowMeLabel>, SurfacePosition> mapping = tracker.getMapping();
         mapping.remove(robots.get(1));
         assertTrue(!mapping.containsKey(robots.get(1)) && tracker.isPresent(robots.get(1)));
-        assertTrue(tracker.getMapping().size() == 3);
+        assertEquals(3, tracker.getMapping().size());
     }
 
     @Test

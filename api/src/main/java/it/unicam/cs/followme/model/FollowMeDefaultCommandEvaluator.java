@@ -60,16 +60,16 @@ public class FollowMeDefaultCommandEvaluator<I extends UniformMotionMovingItem<S
 
     @Override
     public ProgramLine<I> evalSignalCommand(String label) {
-        return new ProgramInstruction<>((item) -> {
-            item.signal(new FollowMeLabel(label));
-        });
+        return new ProgramInstruction<>((item) ->
+            item.signal(new FollowMeLabel(label))
+        );
     }
 
     @Override
     public ProgramLine<I> evalUnsignalCommand(String label) {
-        return new ProgramInstruction<>((item) -> {
-            item.unsignal(new FollowMeLabel(label));
-        });
+        return new ProgramInstruction<>((item) ->
+            item.unsignal(new FollowMeLabel(label))
+        );
     }
 
     @Override
@@ -87,9 +87,9 @@ public class FollowMeDefaultCommandEvaluator<I extends UniformMotionMovingItem<S
 
     @Override
     public ProgramLine<I> evalStopCommand() {
-        return new ProgramInstruction<>((item) -> {
-            item.setCurrentVelocity(0);
-        });
+        return new ProgramInstruction<>((item) ->
+            item.setCurrentVelocity(0)
+        );
     }
 
     @Override

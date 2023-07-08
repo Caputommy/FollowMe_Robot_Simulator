@@ -66,10 +66,8 @@ public record SurfacePosition(double x, double y) implements Position<SurfacePos
      */
     public static final double EPSILON = 10E-6;
 
-    public SurfacePosition(double x, double y) {
+    public SurfacePosition {
         if (!(Double.isFinite(x) && Double.isFinite(y))) throw new IllegalArgumentException();
-        this.x = x;
-        this.y = y;
     }
 
     public double getX() {

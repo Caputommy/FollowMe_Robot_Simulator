@@ -2,7 +2,6 @@ package it.unicam.cs.followme.io;
 
 import it.unicam.cs.followme.model.FollowMeLabel;
 import it.unicam.cs.followme.model.environment.*;
-import it.unicam.cs.followme.model.items.Direction;
 import it.unicam.cs.followme.model.items.Robot;
 import it.unicam.cs.followme.model.items.SurfaceDirection;
 import it.unicam.cs.followme.model.program.ProgramExecution;

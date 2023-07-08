@@ -2,7 +2,6 @@ package it.unicam.cs.followme.model;
 
 import it.unicam.cs.followme.io.FollowMeSimulationLoader;
 import it.unicam.cs.followme.io.SimulationLoader;
-import it.unicam.cs.followme.model.environment.Environment;
 import it.unicam.cs.followme.model.environment.SurfacePosition;
 import it.unicam.cs.followme.model.items.Direction;
 import it.unicam.cs.followme.model.items.Robot;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -23,7 +21,6 @@ import static org.testng.AssertJUnit.assertTrue;
 public class SimulationExecutorTest {
 
     private SimulationLoader<SurfacePosition, FollowMeLabel, Robot<SurfacePosition, FollowMeLabel>> loader;
-    private Environment<SurfacePosition, FollowMeLabel> parsedEnv;
     private List<Robot<SurfacePosition, FollowMeLabel>> robots;
     private SimulationExecutor<SurfacePosition, Robot<SurfacePosition, FollowMeLabel>> simulationExecutor;
 
@@ -66,7 +63,7 @@ public class SimulationExecutorTest {
         assertDoesNotThrow(() -> loader.loadEnvironment(environment));
         assertDoesNotThrow(() -> loader.loadProgram(code));
         try {
-            parsedEnv = loader.loadEnvironment(environment);
+            loader.loadEnvironment(environment);
             simulationExecutor = loader.getExecutor();
         }
         catch (IOException e) {}
