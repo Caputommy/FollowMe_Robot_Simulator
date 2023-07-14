@@ -1,6 +1,5 @@
 package it.unicam.cs.followme.model.simulation;
 
-import it.unicam.cs.followme.model.environment.Environment;
 import it.unicam.cs.followme.model.environment.Position;
 import it.unicam.cs.followme.model.items.ConditionSignaler;
 import it.unicam.cs.followme.model.items.MovingItem;
@@ -146,7 +145,7 @@ public final class SignalingItemSimulationExecutor<P extends Position<P>, L, I e
     }
 
     private void executeOneStepOfProgram() {
-        programExecutions.stream()
+        programExecutions.stream().parallel()
                 .forEach(exec -> exec.executeOneStep());
     }
 }

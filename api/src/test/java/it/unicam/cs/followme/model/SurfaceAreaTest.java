@@ -58,7 +58,7 @@ public class SurfaceAreaTest {
         SurfaceRectangleArea<FollowMeLabel> rectangle =
                 new SurfaceRectangleArea<>(new FollowMeLabel("Rectangle_label_1"), DEFAULT_RECTANGLE_WIDTH, DEFAULT_RECTANGLE_HEIGHT);
         SurfacePosition randomPosition;
-        DoubleRange admittedWidthRange = new DoubleRange(-(DEFAULT_RECTANGLE_WIDTH/2), DEFAULT_RECTANGLE_HEIGHT/2);
+        DoubleRange admittedWidthRange = new DoubleRange(-(DEFAULT_RECTANGLE_WIDTH/2), DEFAULT_RECTANGLE_WIDTH/2);
         DoubleRange admittedHeightRange = new DoubleRange(-(DEFAULT_RECTANGLE_HEIGHT/2), DEFAULT_RECTANGLE_HEIGHT/2);
         for (int i=0; i<10; i++) {
             randomPosition =
