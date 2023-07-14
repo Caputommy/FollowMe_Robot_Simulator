@@ -1,0 +1,12 @@
+label_1 CIRCLE 0 -8 4
+label_2 CIRCLE -10 -4 6
+label_1 CIRCLE -20 0 4
+label_2 CIRCLE -10 4 6
+label_1 CIRCLE 0 8 4
+label_2 CIRCLE 10 4 6
+label_1 CIRCLE 20 0 4
+label_2 CIRCLE 10 -4 6
+label_3 RECTANGLE 0 12 26 4
+label_3 RECTANGLE -16 0 4 24
+label_3 RECTANGLE 0 -12 26 4
+label_3 RECTANGLE 16 0 4 24

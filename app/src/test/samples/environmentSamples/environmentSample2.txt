@@ -1,0 +1,8 @@
+label_1 CIRCLE -2 2 1.5
+label_1 CIRCLE -11 10 1.5
+label_1 CIRCLE -11 10 1.5
+label_1 CIRCLE -20 -8 1.5
+label_1 CIRCLE 13 9 1.5
+label_2 RECTANGLE -10 5 8 20
+label_3 CIRCLE 0 -8 8
+label_3 CIRCLE 20 -10 15
